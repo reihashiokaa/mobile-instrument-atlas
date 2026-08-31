@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/FirstFragment"
+        android:title="Famílias" />
+    <item
+        android:id="@+id/SecondFragment"
+        android:title="Instrumentos" />
+    <item
+        android:id="@+id/thirdFragment"
+        android:title="Galeria" />
+</menu>

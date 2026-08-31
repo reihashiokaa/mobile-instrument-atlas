@@ -3,11 +3,9 @@ package com.example.drawerlayout;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -15,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 
 import com.example.drawerlayout.databinding.ActivityMainBinding;
 
@@ -44,11 +43,19 @@ public class MainActivity extends AppCompatActivity {
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.FirstFragment, R.id.SecondFragment)
+                    R.id.FirstFragment, R.id.SecondFragment, R.id.thirdFragment)
                     .setOpenableLayout(drawer)
                     .build();
             NavigationUI.setupActionBarWithNavController(
                     this, navController, appBarConfiguration);
+
+            BottomNavigationView bottomNavigationView =
+                    findViewById(R.id.bottomNav);
+
+            NavigationUI.setupWithNavController(
+                    bottomNavigationView,
+                    navController
+            );
             NavigationUI.setupWithNavController(
                     navigationView, navController);
         }

@@ -11,33 +11,51 @@ import android.widget.TextView;
 import java.util.List;
 
 public class MeuAdapter extends BaseAdapter {
+
     private Context context;
     private List<ItemModel> lista;
+
     public MeuAdapter(Context context, List<ItemModel> lista) {
         this.context = context;
         this.lista = lista;
     }
+
     @Override
-    public int getCount() { return lista.size(); }
+    public int getCount() {
+        return lista.size();
+    }
+
     @Override
-    public Object getItem(int position) { return lista.get(position); }
+    public Object getItem(int position) {
+        return lista.get(position);
+    }
+
     @Override
-    public long getItemId(int position) { return position; }
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        // cria a linha usando o layout personalizado
         if (convertView == null) {
-// Infla o XML do layout personalizado (item_lista) para criar aview da linha
-                    convertView = LayoutInflater.from(context)
+            convertView = LayoutInflater.from(context)
                     .inflate(R.layout.item_lista, parent, false);
         }
+
+        // pega o item correspondente à posição atual
         ItemModel item = lista.get(position);
+
         ImageView img = convertView.findViewById(R.id.imgItem);
         TextView nome = convertView.findViewById(R.id.txtNome);
         TextView desc = convertView.findViewById(R.id.txtDescricao);
+
+        // coloca os dados do item na linha
         img.setImageResource(item.getImagemResId());
         nome.setText(item.getNome());
         desc.setText(item.getDescricao());
+
         return convertView;
     }
 }

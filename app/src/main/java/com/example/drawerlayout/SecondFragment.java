@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.drawerlayout.databinding.FragmentSecondBinding;
 
@@ -18,132 +17,118 @@ import java.util.List;
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
-    private Spinner spinner;
+
+    // mesmo ViewModel usado pelos outros fragments
+    private SharedViewModel sharedViewModel;
+
     @Override
     public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
             Bundle savedInstanceState
     ) {
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // pega o ViewModel compartilhado pela MainActivity
+        sharedViewModel = new ViewModelProvider(requireActivity())
+                .get(SharedViewModel.class);
 
-        switch (spinner.getSelectedItemPosition()) {
-            case 0:
-                List<ItemModel> cordas = new ArrayList<>();
+        // acompanha a família escolhida no primeiro fragment
+        sharedViewModel.getFamiliaSelecionada().observe(
+                getViewLifecycleOwner(),
+                familia -> {
 
-                cordas.add(new ItemModel(
-                        R.drawable.bmw_m135i_3,
-                        "Imagem 1",
-                        "Descricao 1"
-                ));
-
-                cordas.add(new ItemModel(
-                        R.drawable.bmw_m135i_3,
-                        "Imagem 2",
-                        "Descricao 2"
-                ));
-
-                cordas.add(new ItemModel(
-                        R.drawable.bmw_m135i_3,
-                        "Imagem 3",
-                        "Descricao 3"
-                ));
-
-                MeuAdapter adapter = new MeuAdapter(requireContext(), cordas);
-
-                binding.listViewImagens.setAdapter(adapter);
-                break;
-            case 1:
-                List<ItemModel> sopro = new ArrayList<>();
-
-                sopro.add(new ItemModel(
-                        R.drawable.ferrari_488_2,
-                        "Imagem 1",
-                        "Descricao 1"
-                ));
-
-                sopro.add(new ItemModel(
-                        R.drawable.ferrari_488_2,
-                        "Imagem 2",
-                        "Descricao 2"
-                ));
-
-                sopro.add(new ItemModel(
-                        R.drawable.ferrari_488_2,
-                        "Imagem 3",
-                        "Descricao 3"
-                ));
-
-                MeuAdapter adapter1 = new MeuAdapter(requireContext(), sopro);
-
-                binding.listViewImagens.setAdapter(adapter1);
-                break;
-            case 2:
-                List<ItemModel> percussao = new ArrayList<>();
-
-                percussao.add(new ItemModel(
-                        R.drawable.ford_shelby_6,
-                        "Imagem 1",
-                        "Descricao 1"
-                ));
-
-                percussao.add(new ItemModel(
-                        R.drawable.ford_shelby_6,
-                        "Imagem 2",
-                        "Descricao 2"
-                ));
-
-                percussao.add(new ItemModel(
-                        R.drawable.ford_shelby_6,
-                        "Imagem 3",
-                        "Descricao 3"
-                ));
-
-                MeuAdapter adapter2 = new MeuAdapter(requireContext(), percussao);
-
-                binding.listViewImagens.setAdapter(adapter2);                break;
-
-
-        }
-
-        /*List<ItemModel> dados = new ArrayList<>();
-
-        dados.add(new ItemModel(
-                R.drawable.bmw_m135i_3,
-                "Imagem 1",
-                "Descricao 1"
-        ));
-
-        dados.add(new ItemModel(
-                R.drawable.ferrari_488_2,
-                "Imagem 2",
-                "Descricao 2"
-        ));
-
-        dados.add(new ItemModel(
-                R.drawable.ford_shelby_6,
-                "Imagem 3",
-                "Descricao 3"
-        ));
-
-        MeuAdapter adapter = new MeuAdapter(requireContext(), dados);
-
-        binding.listViewImagens.setAdapter(adapter);*/
+                    // atualiza a lista sempre que a família mudar
+                    carregarInstrumentos(familia);
+                }
+        );
     }
 
+    private void carregarInstrumentos(String familia) {
+
+        // lista que vai receber os instrumentos da família escolhida
+        List<ItemModel> instrumentos = new ArrayList<>();
+
+        if (familia.equals("Corda")) {
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.bmw_m135i_3,
+                    "Instrumento de corda 1",
+                    "Descrição 1"
+            ));
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.bmw_m135i_3,
+                    "Instrumento de corda 2",
+                    "Descrição 2"
+            ));
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.bmw_m135i_3,
+                    "Instrumento de corda 3",
+                    "Descrição 3"
+            ));
+
+        } else if (familia.equals("Sopro")) {
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.ferrari_488_2,
+                    "Instrumento de sopro 1",
+                    "Descrição 1"
+            ));
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.ferrari_488_2,
+                    "Instrumento de sopro 2",
+                    "Descrição 2"
+            ));
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.ferrari_488_2,
+                    "Instrumento de sopro 3",
+                    "Descrição 3"
+            ));
+
+        } else if (familia.equals("Percussão")) {
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.ford_shelby_6,
+                    "Instrumento de percussão 1",
+                    "Descrição 1"
+            ));
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.ford_shelby_6,
+                    "Instrumento de percussão 2",
+                    "Descrição 2"
+            ));
+
+            instrumentos.add(new ItemModel(
+                    R.drawable.ford_shelby_6,
+                    "Instrumento de percussão 3",
+                    "Descrição 3"
+            ));
+        }
+
+        // envia a lista pronta para o ListView
+        MeuAdapter adapter =
+                new MeuAdapter(requireContext(), instrumentos);
+
+        binding.listViewImagens.setAdapter(adapter);
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // evita manter referência da view depois que o fragment for destruído
         binding = null;
     }
-
 }
