@@ -50,87 +50,129 @@ public class ThirdFragment extends Fragment {
 
     private void atualizarGrid(String familia) {
 
+        // famílias definidas no strings.xml
+        String[] familias = getResources()
+                .getStringArray(R.array.familia);
+
+        // lista que recebe as variações da família escolhida
         List<ItemModel> itens = new ArrayList<>();
 
-        if (familia.equals("Corda")) {
+        // CORDA
+        if (familia.equals(familias[0])) {
 
             itens.add(new ItemModel(
                     R.drawable.violino_eletrico,
-                    "Violino elétrico",
-                    "Variação moderna do violino que utiliza captação eletrônica."
+                    getString(R.string.violino_eletrico_nome),
+                    getString(R.string.violino_eletrico_descricao),
+                    getString(R.string.violino_eletrico_detalhes)
             ));
 
             itens.add(new ItemModel(
                     R.drawable.violao_12_cordas,
-                    "Violão de 12 cordas",
-                    "Violão com pares de cordas que produz um som mais cheio e brilhante."
+                    getString(R.string.violao_12_cordas_nome),
+                    getString(R.string.violao_12_cordas_descricao),
+                    getString(R.string.violao_12_cordas_detalhes)
             ));
 
             itens.add(new ItemModel(
                     R.drawable.harpa_celta,
-                    "Harpa celta",
-                    "Tipo de harpa tradicional de tamanho menor, associada à música celta."
+                    getString(R.string.harpa_celta_nome),
+                    getString(R.string.harpa_celta_descricao),
+                    getString(R.string.harpa_celta_detalhes)
             ));
+        }
 
-        } else if (familia.equals("Sopro")) {
+        // SOPRO
+        else if (familia.equals(familias[1])) {
 
             itens.add(new ItemModel(
                     R.drawable.flauta_piccolo,
-                    "Flauta piccolo",
-                    "Pequena flauta de som bastante agudo, muito utilizada em orquestras."
+                    getString(R.string.flauta_piccolo_nome),
+                    getString(R.string.flauta_piccolo_descricao),
+                    getString(R.string.flauta_piccolo_detalhes)
             ));
 
             itens.add(new ItemModel(
                     R.drawable.clarinete_baixo,
-                    "Clarinete baixo",
-                    "Versão maior e mais grave do clarinete tradicional."
+                    getString(R.string.clarinete_baixo_nome),
+                    getString(R.string.clarinete_baixo_descricao),
+                    getString(R.string.clarinete_baixo_detalhes)
             ));
 
             itens.add(new ItemModel(
                     R.drawable.trompete_piccolo,
-                    "Trompete piccolo",
-                    "Versão menor do trompete, conhecida por alcançar notas mais agudas."
+                    getString(R.string.trompete_piccolo_nome),
+                    getString(R.string.trompete_piccolo_descricao),
+                    getString(R.string.trompete_piccolo_detalhes)
             ));
+        }
 
-        } else if (familia.equals("Percussão")) {
+        // PERCUSSÃO
+        else if (familia.equals(familias[2])) {
 
             itens.add(new ItemModel(
                     R.drawable.bateria_eletronica,
-                    "Bateria eletrônica",
-                    "Conjunto eletrônico que reproduz sons de bateria por meio de pads."
+                    getString(R.string.bateria_eletronica_nome),
+                    getString(R.string.bateria_eletronica_descricao),
+                    getString(R.string.bateria_eletronica_detalhes)
             ));
 
             itens.add(new ItemModel(
                     R.drawable.tambor_africano,
-                    "Tambor africano",
-                    "Instrumento tradicional de percussão presente em diferentes culturas africanas."
+                    getString(R.string.tambor_africano_nome),
+                    getString(R.string.tambor_africano_descricao),
+                    getString(R.string.tambor_africano_detalhes)
             ));
 
             itens.add(new ItemModel(
                     R.drawable.pandeiro_meia_lua,
-                    "Pandeiro meia-lua",
-                    "Instrumento de percussão com formato semicircular e pequenas platinelas metálicas."
+                    getString(R.string.pandeiro_meia_lua_nome),
+                    getString(R.string.pandeiro_meia_lua_descricao),
+                    getString(R.string.pandeiro_meia_lua_detalhes)
             ));
         }
 
+        // envia os itens para o GridView
         GridAdapter adapter =
                 new GridAdapter(requireContext(), itens);
 
         binding.gridView.setAdapter(adapter);
 
-        // abre a tela de detalhes ao clicar em um item da galeria
-        binding.gridView.setOnItemClickListener((parent, view, position, id) -> {
+        // abre a tela de detalhes ao clicar em um item
+        binding.gridView.setOnItemClickListener(
+                (parent, view, position, id) -> {
 
-            ItemModel item = itens.get(position);
+                    ItemModel item = itens.get(position);
 
-            Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    Intent intent =
+                            new Intent(
+                                    requireContext(),
+                                    DetailActivity.class
+                            );
 
-            intent.putExtra("nome", item.getNome());
-            intent.putExtra("descricao", item.getDescricao());
-            intent.putExtra("imagem", item.getImagemResId());
+                    intent.putExtra(
+                            "nome",
+                            item.getNome()
+                    );
 
-            startActivity(intent);
-        });
+                    intent.putExtra(
+                            "descricao",
+                            item.getDescricao()
+                    );
+
+                    intent.putExtra(
+                            "detalhes",
+                            item.getDetalhes()
+                    );
+
+                    intent.putExtra(
+                            "imagem",
+                            item.getImagemResId()
+                    );
+
+                    startActivity(intent);
+                }
+        );
     }
 
     @Override

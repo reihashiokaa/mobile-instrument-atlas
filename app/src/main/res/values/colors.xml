@@ -8,4 +8,6 @@
     <color name="instrument_green">#388E3C</color>
     <color name="instrument_orange">#F57C00</color>
 
+    <color name="text_secondary">#666666</color>
+
 </resources>

@@ -1,10 +1,10 @@
 package com.example.drawerlayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,11 +30,16 @@ public class SecondFragment extends Fragment {
     ) {
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            Bundle savedInstanceState
+    ) {
+
         super.onViewCreated(view, savedInstanceState);
 
         // pega o ViewModel compartilhado pela MainActivity
@@ -54,75 +59,95 @@ public class SecondFragment extends Fragment {
 
     private void carregarInstrumentos(String familia) {
 
-        // lista que vai receber os instrumentos da família escolhida
+        // famílias definidas no strings.xml
+        String[] familias = getResources()
+                .getStringArray(R.array.familia);
+
+        // lista que recebe os instrumentos da família escolhida
         List<ItemModel> instrumentos = new ArrayList<>();
 
-        if (familia.equals("Corda")) {
+        // CORDA
+        if (familia.equals(familias[0])) {
 
             instrumentos.add(new ItemModel(
                     R.drawable.violino,
-                    "Violino",
-                    "Instrumento de cordas tocado com arco, conhecido por seu som expressivo e agudo.",
+                    getString(R.string.violino_nome),
+                    getString(R.string.violino_descricao),
+                    getString(R.string.violino_detalhes),
                     R.raw.violino
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.violao,
-                    "Violão",
-                    "Instrumento de cordas dedilhadas muito utilizado em diferentes estilos musicais.",
+                    getString(R.string.violao_nome),
+                    getString(R.string.violao_descricao),
+                    getString(R.string.violao_detalhes),
                     R.raw.violao
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.harpa,
-                    "Harpa",
-                    "Instrumento de cordas tocado com os dedos, conhecido por seu som suave e característico.",
+                    getString(R.string.harpa_nome),
+                    getString(R.string.harpa_descricao),
+                    getString(R.string.harpa_detalhes),
                     R.raw.harpa
             ));
 
-        } else if (familia.equals("Sopro")) {
+        }
+
+        // SOPRO
+        else if (familia.equals(familias[1])) {
 
             instrumentos.add(new ItemModel(
                     R.drawable.flauta,
-                    "Flauta",
-                    "Instrumento de sopro que produz som pela passagem de ar e possui timbre leve e agudo.",
+                    getString(R.string.flauta_nome),
+                    getString(R.string.flauta_descricao),
+                    getString(R.string.flauta_detalhes),
                     R.raw.flauta
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.clarinete,
-                    "Clarinete",
-                    "Instrumento de sopro de palheta simples, conhecido por sua grande variedade de tons.",
+                    getString(R.string.clarinete_nome),
+                    getString(R.string.clarinete_descricao),
+                    getString(R.string.clarinete_detalhes),
                     R.raw.clarinete
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.trompete,
-                    "Trompete",
-                    "Instrumento de metal com som forte e brilhante, muito utilizado em bandas e orquestras.",
+                    getString(R.string.trompete_nome),
+                    getString(R.string.trompete_descricao),
+                    getString(R.string.trompete_detalhes),
                     R.raw.trompete
             ));
 
-        } else if (familia.equals("Percussão")) {
+        }
+
+        // PERCUSSÃO
+        else if (familia.equals(familias[2])) {
 
             instrumentos.add(new ItemModel(
                     R.drawable.bateria,
-                    "Bateria",
-                    "Conjunto de instrumentos de percussão utilizado para criar ritmo e acompanhar músicas.",
+                    getString(R.string.bateria_nome),
+                    getString(R.string.bateria_descricao),
+                    getString(R.string.bateria_detalhes),
                     R.raw.bateria
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.tambor,
-                    "Tambor",
-                    "Instrumento de percussão que produz som pela vibração de uma membrana ao ser golpeada.",
+                    getString(R.string.tambor_nome),
+                    getString(R.string.tambor_descricao),
+                    getString(R.string.tambor_detalhes),
                     R.raw.tambor
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.pandeiro,
-                    "Pandeiro",
-                    "Instrumento de percussão de mão muito presente em diversos estilos da música brasileira.",
+                    getString(R.string.pandeiro_nome),
+                    getString(R.string.pandeiro_descricao),
+                    getString(R.string.pandeiro_detalhes),
                     R.raw.pandeiro
             ));
         }
@@ -134,23 +159,51 @@ public class SecondFragment extends Fragment {
         binding.listViewImagens.setAdapter(adapter);
 
         // abre a tela de detalhes ao clicar em um instrumento
-        binding.listViewImagens.setOnItemClickListener((parent, view, position, id) -> {
+        binding.listViewImagens.setOnItemClickListener(
+                (parent, view, position, id) -> {
 
-            ItemModel instrumento = instrumentos.get(position);
+                    ItemModel instrumento =
+                            instrumentos.get(position);
 
-            Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    Intent intent =
+                            new Intent(
+                                    requireContext(),
+                                    DetailActivity.class
+                            );
 
-            intent.putExtra("nome", instrumento.getNome());
-            intent.putExtra("descricao", instrumento.getDescricao());
-            intent.putExtra("imagem", instrumento.getImagemResId());
-            intent.putExtra("som", instrumento.getSomResId());
+                    intent.putExtra(
+                            "nome",
+                            instrumento.getNome()
+                    );
 
-            startActivity(intent);
-        });
+                    intent.putExtra(
+                            "descricao",
+                            instrumento.getDescricao()
+                    );
+
+                    intent.putExtra(
+                            "detalhes",
+                            instrumento.getDetalhes()
+                    );
+
+                    intent.putExtra(
+                            "imagem",
+                            instrumento.getImagemResId()
+                    );
+
+                    intent.putExtra(
+                            "som",
+                            instrumento.getSomResId()
+                    );
+
+                    startActivity(intent);
+                }
+        );
     }
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
 
         // evita manter referência da view depois que o fragment for destruído
