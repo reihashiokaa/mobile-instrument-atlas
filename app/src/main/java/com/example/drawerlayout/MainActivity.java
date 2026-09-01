@@ -6,6 +6,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -63,6 +65,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void mostrarConfiguracoes() {
+
+        String[] temas = {"Modo Claro", "Modo Noturno"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Escolha o tema")
+                .setItems(temas, (dialog, which) -> {
+
+                    if (which == 0) {
+
+                        // ativa o modo claro
+                        AppCompatDelegate.setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_NO
+                        );
+
+                    } else {
+
+                        // ativa o modo noturno
+                        AppCompatDelegate.setDefaultNightMode(
+                                AppCompatDelegate.MODE_NIGHT_YES
+                        );
+                    }
+                })
+                .show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -77,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            mostrarConfiguracoes();
             return true;
         }
 
