@@ -54,61 +54,61 @@ public class ThirdFragment extends Fragment {
         if (familia.equals("Corda")) {
 
             itens.add(new ItemModel(
-                    R.drawable.bmw_m135i_3,
-                    "Variação de corda 1",
-                    "Descrição temporária"
+                    R.drawable.violino_eletrico,
+                    "Violino elétrico",
+                    "Variação moderna do violino que utiliza captação eletrônica."
             ));
 
             itens.add(new ItemModel(
-                    R.drawable.ferrari_488_2,
-                    "Variação de corda 2",
-                    "Descrição temporária"
+                    R.drawable.violao_12_cordas,
+                    "Violão de 12 cordas",
+                    "Violão com pares de cordas que produz um som mais cheio e brilhante."
             ));
 
             itens.add(new ItemModel(
-                    R.drawable.ford_shelby_6,
-                    "Variação de corda 3",
-                    "Descrição temporária"
+                    R.drawable.harpa_celta,
+                    "Harpa celta",
+                    "Tipo de harpa tradicional de tamanho menor, associada à música celta."
             ));
 
         } else if (familia.equals("Sopro")) {
 
             itens.add(new ItemModel(
-                    R.drawable.bmw_m135i_3,
-                    "Variação de sopro 1",
-                    "Descrição temporária"
+                    R.drawable.flauta_piccolo,
+                    "Flauta piccolo",
+                    "Pequena flauta de som bastante agudo, muito utilizada em orquestras."
             ));
 
             itens.add(new ItemModel(
-                    R.drawable.ferrari_488_2,
-                    "Variação de sopro 2",
-                    "Descrição temporária"
+                    R.drawable.clarinete_baixo,
+                    "Clarinete baixo",
+                    "Versão maior e mais grave do clarinete tradicional."
             ));
 
             itens.add(new ItemModel(
-                    R.drawable.ford_shelby_6,
-                    "Variação de sopro 3",
-                    "Descrição temporária"
+                    R.drawable.trompete_piccolo,
+                    "Trompete piccolo",
+                    "Versão menor do trompete, conhecida por alcançar notas mais agudas."
             ));
 
         } else if (familia.equals("Percussão")) {
 
             itens.add(new ItemModel(
-                    R.drawable.bmw_m135i_3,
-                    "Variação de percussão 1",
-                    "Descrição temporária"
+                    R.drawable.bateria_eletronica,
+                    "Bateria eletrônica",
+                    "Conjunto eletrônico que reproduz sons de bateria por meio de pads."
             ));
 
             itens.add(new ItemModel(
-                    R.drawable.ferrari_488_2,
-                    "Variação de percussão 2",
-                    "Descrição temporária"
+                    R.drawable.tambor_africano,
+                    "Tambor africano",
+                    "Instrumento tradicional de percussão presente em diferentes culturas africanas."
             ));
 
             itens.add(new ItemModel(
-                    R.drawable.ford_shelby_6,
-                    "Variação de percussão 3",
-                    "Descrição temporária"
+                    R.drawable.pandeiro_meia_lua,
+                    "Pandeiro meia-lua",
+                    "Instrumento de percussão com formato semicircular e pequenas platinelas metálicas."
             ));
         }
 
