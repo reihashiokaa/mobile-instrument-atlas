@@ -8,6 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -67,6 +68,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void mostrarConfiguracoes() {
 
+        String[] opcoes = {"Tema", "Cor do aplicativo"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Configurações")
+                .setItems(opcoes, (dialog, which) -> {
+
+                    if (which == 0) {
+                        mostrarTemas();
+                    } else {
+                        mostrarCores();
+                    }
+                })
+                .show();
+    }
+
+    private void mostrarTemas() {
+
         String[] temas = {"Modo Claro", "Modo Noturno"};
 
         new AlertDialog.Builder(this)
@@ -75,18 +93,49 @@ public class MainActivity extends AppCompatActivity {
 
                     if (which == 0) {
 
-                        // ativa o modo claro
                         AppCompatDelegate.setDefaultNightMode(
                                 AppCompatDelegate.MODE_NIGHT_NO
                         );
 
                     } else {
 
-                        // ativa o modo noturno
                         AppCompatDelegate.setDefaultNightMode(
                                 AppCompatDelegate.MODE_NIGHT_YES
                         );
                     }
+                })
+                .show();
+    }
+
+    private void mostrarCores() {
+
+        String[] cores = {"Azul", "Verde", "Laranja"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Escolha a cor")
+                .setItems(cores, (dialog, which) -> {
+
+                    int cor;
+
+                    if (which == 0) {
+                        cor = R.color.instrument_blue;
+                    } else if (which == 1) {
+                        cor = R.color.instrument_green;
+                    } else {
+                        cor = R.color.instrument_orange;
+                    }
+
+                    // altera elementos visuais da tela principal
+                    binding.toolbar.setBackgroundColor(
+                            ContextCompat.getColor(this, cor)
+                    );
+
+                    BottomNavigationView bottomNavigationView =
+                            findViewById(R.id.bottomNav);
+
+                    bottomNavigationView.setBackgroundColor(
+                            ContextCompat.getColor(this, cor)
+                    );
                 })
                 .show();
     }
