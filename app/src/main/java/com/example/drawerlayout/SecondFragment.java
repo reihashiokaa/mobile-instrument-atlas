@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -61,19 +62,22 @@ public class SecondFragment extends Fragment {
             instrumentos.add(new ItemModel(
                     R.drawable.violino,
                     "Violino",
-                    "Instrumento de cordas tocado com arco, conhecido por seu som expressivo e agudo."
+                    "Instrumento de cordas tocado com arco, conhecido por seu som expressivo e agudo.",
+                    R.raw.violino
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.violao,
                     "Violão",
-                    "Instrumento de cordas dedilhadas muito utilizado em diferentes estilos musicais."
+                    "Instrumento de cordas dedilhadas muito utilizado em diferentes estilos musicais.",
+                    R.raw.violao
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.harpa,
                     "Harpa",
-                    "Instrumento de cordas tocado com os dedos, conhecido por seu som suave e característico."
+                    "Instrumento de cordas tocado com os dedos, conhecido por seu som suave e característico.",
+                    R.raw.harpa
             ));
 
         } else if (familia.equals("Sopro")) {
@@ -81,19 +85,22 @@ public class SecondFragment extends Fragment {
             instrumentos.add(new ItemModel(
                     R.drawable.flauta,
                     "Flauta",
-                    "Instrumento de sopro que produz som pela passagem de ar e possui timbre leve e agudo."
+                    "Instrumento de sopro que produz som pela passagem de ar e possui timbre leve e agudo.",
+                    R.raw.flauta
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.clarinete,
                     "Clarinete",
-                    "Instrumento de sopro de palheta simples, conhecido por sua grande variedade de tons."
+                    "Instrumento de sopro de palheta simples, conhecido por sua grande variedade de tons.",
+                    R.raw.clarinete
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.trompete,
                     "Trompete",
-                    "Instrumento de metal com som forte e brilhante, muito utilizado em bandas e orquestras."
+                    "Instrumento de metal com som forte e brilhante, muito utilizado em bandas e orquestras.",
+                    R.raw.trompete
             ));
 
         } else if (familia.equals("Percussão")) {
@@ -101,19 +108,22 @@ public class SecondFragment extends Fragment {
             instrumentos.add(new ItemModel(
                     R.drawable.bateria,
                     "Bateria",
-                    "Conjunto de instrumentos de percussão utilizado para criar ritmo e acompanhar músicas."
+                    "Conjunto de instrumentos de percussão utilizado para criar ritmo e acompanhar músicas.",
+                    R.raw.bateria
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.tambor,
                     "Tambor",
-                    "Instrumento de percussão que produz som pela vibração de uma membrana ao ser golpeada."
+                    "Instrumento de percussão que produz som pela vibração de uma membrana ao ser golpeada.",
+                    R.raw.tambor
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.pandeiro,
                     "Pandeiro",
-                    "Instrumento de percussão de mão muito presente em diversos estilos da música brasileira."
+                    "Instrumento de percussão de mão muito presente em diversos estilos da música brasileira.",
+                    R.raw.pandeiro
             ));
         }
 
@@ -122,6 +132,21 @@ public class SecondFragment extends Fragment {
                 new MeuAdapter(requireContext(), instrumentos);
 
         binding.listViewImagens.setAdapter(adapter);
+
+        // abre a tela de detalhes ao clicar em um instrumento
+        binding.listViewImagens.setOnItemClickListener((parent, view, position, id) -> {
+
+            ItemModel instrumento = instrumentos.get(position);
+
+            Intent intent = new Intent(requireContext(), DetailActivity.class);
+
+            intent.putExtra("nome", instrumento.getNome());
+            intent.putExtra("descricao", instrumento.getDescricao());
+            intent.putExtra("imagem", instrumento.getImagemResId());
+            intent.putExtra("som", instrumento.getSomResId());
+
+            startActivity(intent);
+        });
     }
 
     @Override
