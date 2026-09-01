@@ -1,6 +1,7 @@
 package com.example.drawerlayout;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
@@ -35,6 +36,10 @@ public class DetailActivity extends AppCompatActivity {
         String descricao = getIntent().getStringExtra("descricao");
         int imagem = getIntent().getIntExtra("imagem", 0);
         int som = getIntent().getIntExtra("som", 0);
+        // esconde o botão quando o item não possui áudio
+        if (som == 0) {
+            buttonPlay.setVisibility(View.GONE);
+        }
 
         // coloca os dados na tela
         textTitle.setText(nome);

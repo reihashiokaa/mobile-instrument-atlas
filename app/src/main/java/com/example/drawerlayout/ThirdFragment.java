@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -116,6 +117,20 @@ public class ThirdFragment extends Fragment {
                 new GridAdapter(requireContext(), itens);
 
         binding.gridView.setAdapter(adapter);
+
+        // abre a tela de detalhes ao clicar em um item da galeria
+        binding.gridView.setOnItemClickListener((parent, view, position, id) -> {
+
+            ItemModel item = itens.get(position);
+
+            Intent intent = new Intent(requireContext(), DetailActivity.class);
+
+            intent.putExtra("nome", item.getNome());
+            intent.putExtra("descricao", item.getDescricao());
+            intent.putExtra("imagem", item.getImagemResId());
+
+            startActivity(intent);
+        });
     }
 
     @Override
