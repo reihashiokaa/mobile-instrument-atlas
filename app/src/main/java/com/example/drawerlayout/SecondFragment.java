@@ -59,61 +59,61 @@ public class SecondFragment extends Fragment {
         if (familia.equals("Corda")) {
 
             instrumentos.add(new ItemModel(
-                    R.drawable.bmw_m135i_3,
-                    "Instrumento de corda 1",
-                    "Descrição 1"
+                    R.drawable.violino,
+                    "Violino",
+                    "Instrumento de cordas tocado com arco, conhecido por seu som expressivo e agudo."
             ));
 
             instrumentos.add(new ItemModel(
-                    R.drawable.bmw_m135i_3,
-                    "Instrumento de corda 2",
-                    "Descrição 2"
+                    R.drawable.violao,
+                    "Violão",
+                    "Instrumento de cordas dedilhadas muito utilizado em diferentes estilos musicais."
             ));
 
             instrumentos.add(new ItemModel(
-                    R.drawable.bmw_m135i_3,
-                    "Instrumento de corda 3",
-                    "Descrição 3"
+                    R.drawable.harpa,
+                    "Harpa",
+                    "Instrumento de cordas tocado com os dedos, conhecido por seu som suave e característico."
             ));
 
         } else if (familia.equals("Sopro")) {
 
             instrumentos.add(new ItemModel(
-                    R.drawable.ferrari_488_2,
-                    "Instrumento de sopro 1",
-                    "Descrição 1"
+                    R.drawable.flauta,
+                    "Flauta",
+                    "Instrumento de sopro que produz som pela passagem de ar e possui timbre leve e agudo."
             ));
 
             instrumentos.add(new ItemModel(
-                    R.drawable.ferrari_488_2,
-                    "Instrumento de sopro 2",
-                    "Descrição 2"
+                    R.drawable.clarinete,
+                    "Clarinete",
+                    "Instrumento de sopro de palheta simples, conhecido por sua grande variedade de tons."
             ));
 
             instrumentos.add(new ItemModel(
-                    R.drawable.ferrari_488_2,
-                    "Instrumento de sopro 3",
-                    "Descrição 3"
+                    R.drawable.trompete,
+                    "Trompete",
+                    "Instrumento de metal com som forte e brilhante, muito utilizado em bandas e orquestras."
             ));
 
         } else if (familia.equals("Percussão")) {
 
             instrumentos.add(new ItemModel(
-                    R.drawable.ford_shelby_6,
-                    "Instrumento de percussão 1",
-                    "Descrição 1"
+                    R.drawable.bateria,
+                    "Bateria",
+                    "Conjunto de instrumentos de percussão utilizado para criar ritmo e acompanhar músicas."
             ));
 
             instrumentos.add(new ItemModel(
-                    R.drawable.ford_shelby_6,
-                    "Instrumento de percussão 2",
-                    "Descrição 2"
+                    R.drawable.tambor,
+                    "Tambor",
+                    "Instrumento de percussão que produz som pela vibração de uma membrana ao ser golpeada."
             ));
 
             instrumentos.add(new ItemModel(
-                    R.drawable.ford_shelby_6,
-                    "Instrumento de percussão 3",
-                    "Descrição 3"
+                    R.drawable.pandeiro,
+                    "Pandeiro",
+                    "Instrumento de percussão de mão muito presente em diversos estilos da música brasileira."
             ));
         }
 
