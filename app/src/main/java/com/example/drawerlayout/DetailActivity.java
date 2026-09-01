@@ -34,6 +34,7 @@ public class DetailActivity extends AppCompatActivity {
         // recebe os dados enviados pelo fragment
         String nome = getIntent().getStringExtra("nome");
         String descricao = getIntent().getStringExtra("descricao");
+        String detalhes = getIntent().getStringExtra("detalhes");
         int imagem = getIntent().getIntExtra("imagem", 0);
         int som = getIntent().getIntExtra("som", 0);
         // esconde o botão quando o item não possui áudio
@@ -43,7 +44,11 @@ public class DetailActivity extends AppCompatActivity {
 
         // coloca os dados na tela
         textTitle.setText(nome);
-        textDescription.setText(descricao);
+        if (detalhes != null) {
+            textDescription.setText(detalhes);
+        } else {
+            textDescription.setText(descricao);
+        }
 
         if (imagem != 0) {
             imageDetail.setImageResource(imagem);

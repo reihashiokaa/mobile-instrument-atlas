@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/FirstFragment"
-        android:title="Famílias" />
+        android:icon="@drawable/ic_familias"
+        android:title="@string/first_fragment_label" />
+
     <item
         android:id="@+id/SecondFragment"
-        android:title="Instrumentos" />
+        android:icon="@drawable/ic_instrumentos"
+        android:title="@string/second_fragment_label" />
+
     <item
         android:id="@+id/thirdFragment"
-        android:title="Galeria" />
+        android:icon="@drawable/ic_galeria"
+        android:title="@string/third_fragment_label" />
+
 </menu>

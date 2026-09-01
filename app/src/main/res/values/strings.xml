@@ -54,6 +54,42 @@
     <string name="pandeiro_meia_lua_nome">Pandeiro meia-lua</string>
     <string name="pandeiro_meia_lua_descricao">Instrumento de percussão com formato semicircular e pequenas platinelas metálicas.</string>
 
+    <string name="violino_detalhes">O violino surgiu na Europa por volta do século XVI e tornou-se um dos principais instrumentos da música de concerto. Possui quatro cordas e normalmente é tocado com um arco, embora também possa ser dedilhado. Seu som pode variar de delicado a bastante intenso, e o instrumento está presente em orquestras, grupos de câmara e diversos estilos de música popular.</string>
+
+    <string name="violao_detalhes">O violão é um instrumento de cordas dedilhadas muito difundido em diferentes culturas e estilos musicais. Normalmente possui seis cordas e seu som é produzido quando elas vibram sobre o corpo do instrumento. É utilizado tanto como instrumento de acompanhamento quanto para melodias e solos, sendo especialmente presente na música popular brasileira.</string>
+
+    <string name="harpa_detalhes">A harpa é um dos instrumentos de cordas mais antigos conhecidos e possui diferentes formas ao longo da história. Suas cordas são tocadas diretamente com os dedos e ficam organizadas em diferentes comprimentos, produzindo notas variadas. A harpa moderna é muito utilizada em orquestras e é conhecida por seu timbre suave e pela possibilidade de executar acordes, melodias e efeitos sonoros.</string>
+
+    <string name="flauta_detalhes">A flauta pertence à família dos instrumentos de sopro e produz som quando o músico direciona uma corrente de ar para o instrumento. Existem diversos tipos de flauta, construídos com diferentes materiais e formatos. A flauta transversal moderna é muito utilizada em orquestras, bandas e conjuntos musicais e se destaca pelo timbre claro e pela facilidade para executar melodias rápidas.</string>
+
+    <string name="clarinete_detalhes">O clarinete é um instrumento de sopro que utiliza uma palheta simples para produzir o som. Seu formato atual começou a se desenvolver na Europa e passou por várias modificações ao longo do tempo. O instrumento possui uma grande extensão de notas e pode produzir sons graves, médios e agudos, sendo utilizado em orquestras, bandas, jazz e outros estilos musicais.</string>
+
+    <string name="trompete_detalhes">O trompete é um instrumento de sopro da família dos metais. O som é produzido pela vibração dos lábios do músico no bocal, enquanto válvulas ajudam a alterar as notas executadas. Instrumentos semelhantes ao trompete existem há muitos séculos, mas o modelo moderno ganhou novas possibilidades com a criação das válvulas. É muito utilizado em orquestras, bandas, jazz e música popular.</string>
+
+    <string name="bateria_detalhes">A bateria é formada por um conjunto de tambores, pratos e outros elementos de percussão organizados para serem tocados por uma única pessoa. Sua configuração moderna se desenvolveu principalmente no início do século XX. O baterista utiliza baquetas e pedais para combinar diferentes sons e construir a base rítmica da música. É muito comum em estilos como rock, jazz, pop e música brasileira.</string>
+
+    <string name="tambor_detalhes">O tambor é um dos tipos mais antigos de instrumento de percussão e aparece em diferentes culturas ao redor do mundo. Seu som é produzido principalmente quando uma membrana esticada é golpeada com as mãos, baquetas ou outros objetos. Existem tambores de muitos tamanhos, formatos e materiais, utilizados em cerimônias, comunicação, manifestações culturais e diferentes estilos musicais.</string>
+
+    <string name="pandeiro_detalhes">O pandeiro é um instrumento de percussão formado por um aro, uma membrana e pequenas peças metálicas chamadas platinelas. Ele pode ser tocado com os dedos, a palma e outras partes da mão, permitindo produzir diferentes timbres e ritmos. No Brasil, tornou-se especialmente importante em gêneros como samba e choro, embora também seja utilizado em muitos outros estilos musicais.</string>
+
+    <string name="violino_eletrico_detalhes">O violino elétrico é uma versão moderna do violino tradicional que utiliza captadores eletrônicos para transformar a vibração das cordas em sinal elétrico. Esse sinal pode ser amplificado e receber efeitos sonoros, permitindo maior variedade de timbres. É bastante utilizado em apresentações ao vivo e em estilos como rock, jazz e música experimental.</string>
+
+    <string name="violao_12_cordas_detalhes">O violão de 12 cordas possui seis pares de cordas, em vez das seis cordas individuais encontradas no violão tradicional. As cordas de cada par são tocadas juntas e produzem um som mais cheio, brilhante e rico em harmônicos. É muito utilizado como instrumento de acompanhamento em estilos como folk, rock e música popular.</string>
+
+    <string name="harpa_celta_detalhes">A harpa celta é uma harpa tradicional de tamanho geralmente menor que a harpa de concerto. Está associada à cultura e à música tradicional de regiões como Irlanda, Escócia e País de Gales. Suas cordas são tocadas diretamente com os dedos e seu tamanho reduzido facilita o transporte e o uso em apresentações individuais ou pequenos grupos.</string>
+
+    <string name="flauta_piccolo_detalhes">A flauta piccolo é um instrumento de sopro semelhante à flauta transversal, porém menor e com registro mais agudo. Seu som pode se destacar mesmo entre muitos instrumentos, por isso é frequentemente utilizada para reforçar passagens agudas em orquestras e bandas. Apesar do tamanho reduzido, exige uma técnica de sopro semelhante à da flauta transversal.</string>
+
+    <string name="clarinete_baixo_detalhes">O clarinete baixo é uma versão maior do clarinete tradicional e possui um registro consideravelmente mais grave. Normalmente apresenta um tubo longo e uma campana metálica curvada. É utilizado em orquestras, bandas e conjuntos contemporâneos, podendo desempenhar tanto funções de acompanhamento quanto partes melódicas.</string>
+
+    <string name="trompete_piccolo_detalhes">O trompete piccolo é uma versão menor do trompete tradicional, desenvolvida especialmente para alcançar registros mais agudos. Geralmente possui um tubo mais curto e pode utilizar diferentes afinações. É bastante empregado em repertórios orquestrais e em obras que exigem notas agudas com maior precisão.</string>
+
+    <string name="bateria_eletronica_detalhes">A bateria eletrônica substitui grande parte dos tambores e pratos acústicos por pads que detectam os golpes do músico. Esses sinais são enviados para um módulo eletrônico responsável por reproduzir diferentes sons de bateria e percussão. Ela permite controlar o volume, utilizar fones de ouvido e escolher diversos timbres, sendo comum em estudos, gravações e apresentações.</string>
+
+    <string name="tambor_africano_detalhes">Os tambores africanos representam uma grande variedade de instrumentos tradicionais encontrados em diferentes povos e regiões do continente africano. Muitos são construídos com madeira e pele animal e podem ser tocados diretamente com as mãos. Além da função musical, diversos tipos de tambor possuem importância cultural e são utilizados em celebrações, danças, cerimônias e formas tradicionais de comunicação.</string>
+
+    <string name="pandeiro_meia_lua_detalhes">O pandeiro meia-lua possui formato semicircular e diversas platinelas metálicas distribuídas ao longo de sua estrutura. Diferentemente do pandeiro tradicional brasileiro, normalmente não possui uma membrana. O som é produzido principalmente ao sacudir ou golpear o instrumento, sendo bastante utilizado para acrescentar efeitos rítmicos em bandas, apresentações e atividades musicais.</string>
+
     <string name="app_name">Atlas de Instrumentos</string>
 
     <string name="action_settings">Configurações</string>
@@ -98,5 +134,7 @@
         <item>@string/color_green</item>
         <item>@string/color_orange</item>
     </string-array>
+
+
 
 </resources>
