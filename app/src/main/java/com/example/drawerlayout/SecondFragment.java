@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -122,6 +123,20 @@ public class SecondFragment extends Fragment {
                 new MeuAdapter(requireContext(), instrumentos);
 
         binding.listViewImagens.setAdapter(adapter);
+
+        // abre a tela de detalhes ao clicar em um instrumento
+        binding.listViewImagens.setOnItemClickListener((parent, view, position, id) -> {
+
+            ItemModel instrumento = instrumentos.get(position);
+
+            Intent intent = new Intent(requireContext(), DetailActivity.class);
+
+            intent.putExtra("nome", instrumento.getNome());
+            intent.putExtra("descricao", instrumento.getDescricao());
+            intent.putExtra("imagem", instrumento.getImagemResId());
+
+            startActivity(intent);
+        });
     }
 
     @Override
