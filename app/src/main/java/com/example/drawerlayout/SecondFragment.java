@@ -54,75 +54,79 @@ public class SecondFragment extends Fragment {
 
     private void carregarInstrumentos(String familia) {
 
+        // famílias definidas no strings.xml
+        String[] familias = getResources()
+                .getStringArray(R.array.familia);
+
         // lista que vai receber os instrumentos da família escolhida
         List<ItemModel> instrumentos = new ArrayList<>();
 
-        if (familia.equals("Corda")) {
+        if (familia.equals(familias[0])) {
 
             instrumentos.add(new ItemModel(
                     R.drawable.violino,
-                    "Violino",
-                    "Instrumento de cordas tocado com arco, conhecido por seu som expressivo e agudo.",
+                    getString(R.string.violino_nome),
+                    getString(R.string.violino_descricao),
                     R.raw.violino
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.violao,
-                    "Violão",
-                    "Instrumento de cordas dedilhadas muito utilizado em diferentes estilos musicais.",
+                    getString(R.string.violao_nome),
+                    getString(R.string.violao_descricao),
                     R.raw.violao
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.harpa,
-                    "Harpa",
-                    "Instrumento de cordas tocado com os dedos, conhecido por seu som suave e característico.",
+                    getString(R.string.harpa_nome),
+                    getString(R.string.harpa_descricao),
                     R.raw.harpa
             ));
 
-        } else if (familia.equals("Sopro")) {
+        } else if (familia.equals(familias[1])) {
 
             instrumentos.add(new ItemModel(
                     R.drawable.flauta,
-                    "Flauta",
-                    "Instrumento de sopro que produz som pela passagem de ar e possui timbre leve e agudo.",
+                    getString(R.string.flauta_nome),
+                    getString(R.string.flauta_descricao),
                     R.raw.flauta
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.clarinete,
-                    "Clarinete",
-                    "Instrumento de sopro de palheta simples, conhecido por sua grande variedade de tons.",
+                    getString(R.string.clarinete_nome),
+                    getString(R.string.clarinete_descricao),
                     R.raw.clarinete
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.trompete,
-                    "Trompete",
-                    "Instrumento de metal com som forte e brilhante, muito utilizado em bandas e orquestras.",
+                    getString(R.string.trompete_nome),
+                    getString(R.string.trompete_descricao),
                     R.raw.trompete
             ));
 
-        } else if (familia.equals("Percussão")) {
+        } else if (familia.equals(familias[2])) {
 
             instrumentos.add(new ItemModel(
                     R.drawable.bateria,
-                    "Bateria",
-                    "Conjunto de instrumentos de percussão utilizado para criar ritmo e acompanhar músicas.",
+                    getString(R.string.bateria_nome),
+                    getString(R.string.bateria_descricao),
                     R.raw.bateria
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.tambor,
-                    "Tambor",
-                    "Instrumento de percussão que produz som pela vibração de uma membrana ao ser golpeada.",
+                    getString(R.string.tambor_nome),
+                    getString(R.string.tambor_descricao),
                     R.raw.tambor
             ));
 
             instrumentos.add(new ItemModel(
                     R.drawable.pandeiro,
-                    "Pandeiro",
-                    "Instrumento de percussão de mão muito presente em diversos estilos da música brasileira.",
+                    getString(R.string.pandeiro_nome),
+                    getString(R.string.pandeiro_descricao),
                     R.raw.pandeiro
             ));
         }

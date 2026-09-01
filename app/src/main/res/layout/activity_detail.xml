@@ -32,28 +32,26 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="TextView" />
+            android:layout_marginBottom="24dp"/>
 
         <Button
             android:id="@+id/buttonPlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:text="Reproduzir Som" />
+            android:text="@string/play_sound"/>
 
         <Button
             android:id="@+id/buttonClose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Encerrar" />
+            android:text="@string/close"/>
 
     </LinearLayout>
 

@@ -1,20 +1,102 @@
 <resources>
-    <string name="app_name">DrawerLayout</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet   </string>
+    <string name="violino_nome">Violino</string>
+    <string name="violino_descricao">Instrumento de cordas tocado com arco, conhecido por seu som expressivo e agudo.</string>
+
+    <string name="violao_nome">Violão</string>
+    <string name="violao_descricao">Instrumento de cordas dedilhadas muito utilizado em diferentes estilos musicais.</string>
+
+    <string name="harpa_nome">Harpa</string>
+    <string name="harpa_descricao">Instrumento de cordas tocado com os dedos, conhecido por seu som suave e característico.</string>
+
+    <string name="flauta_nome">Flauta</string>
+    <string name="flauta_descricao">Instrumento de sopro que produz som pela passagem de ar e possui timbre leve e agudo.</string>
+
+    <string name="clarinete_nome">Clarinete</string>
+    <string name="clarinete_descricao">Instrumento de sopro de palheta simples, conhecido por sua grande variedade de tons.</string>
+
+    <string name="trompete_nome">Trompete</string>
+    <string name="trompete_descricao">Instrumento de metal com som forte e brilhante, muito utilizado em bandas e orquestras.</string>
+
+    <string name="bateria_nome">Bateria</string>
+    <string name="bateria_descricao">Conjunto de instrumentos de percussão utilizado para criar ritmo e acompanhar músicas.</string>
+
+    <string name="tambor_nome">Tambor</string>
+    <string name="tambor_descricao">Instrumento de percussão que produz som pela vibração de uma membrana ao ser golpeada.</string>
+
+    <string name="pandeiro_nome">Pandeiro</string>
+    <string name="pandeiro_descricao">Instrumento de percussão de mão muito presente em diversos estilos da música brasileira.</string>
+
+    <string name="violino_eletrico_nome">Violino elétrico</string>
+    <string name="violino_eletrico_descricao">Variação moderna do violino que utiliza captação eletrônica.</string>
+
+    <string name="violao_12_cordas_nome">Violão de 12 cordas</string>
+    <string name="violao_12_cordas_descricao">Violão com pares de cordas que produz um som mais cheio e brilhante.</string>
+
+    <string name="harpa_celta_nome">Harpa celta</string>
+    <string name="harpa_celta_descricao">Tipo de harpa tradicional de tamanho menor, associada à música celta.</string>
+
+    <string name="flauta_piccolo_nome">Flauta piccolo</string>
+    <string name="flauta_piccolo_descricao">Pequena flauta de som bastante agudo, muito utilizada em orquestras.</string>
+
+    <string name="clarinete_baixo_nome">Clarinete baixo</string>
+    <string name="clarinete_baixo_descricao">Versão maior e mais grave do clarinete tradicional.</string>
+
+    <string name="trompete_piccolo_nome">Trompete piccolo</string>
+    <string name="trompete_piccolo_descricao">Versão menor do trompete, conhecida por alcançar notas mais agudas.</string>
+
+    <string name="bateria_eletronica_nome">Bateria eletrônica</string>
+    <string name="bateria_eletronica_descricao">Conjunto eletrônico que reproduz sons de bateria por meio de pads.</string>
+
+    <string name="tambor_africano_nome">Tambor africano</string>
+    <string name="tambor_africano_descricao">Instrumento tradicional de percussão presente em diferentes culturas africanas.</string>
+
+    <string name="pandeiro_meia_lua_nome">Pandeiro meia-lua</string>
+    <string name="pandeiro_meia_lua_descricao">Instrumento de percussão com formato semicircular e pequenas platinelas metálicas.</string>
+
+    <string name="app_name">Atlas de Instrumentos</string>
+
+    <string name="action_settings">Configurações</string>
+    <string name="first_fragment_label">Famílias</string>
+    <string name="second_fragment_label">Instrumentos</string>
+    <string name="third_fragment_label">Galeria</string>
+
     <string-array name="familia">
         <item>Corda</item>
         <item>Sopro</item>
         <item>Percussão</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="play_sound">Reproduzir Som</string>
+    <string name="close">Encerrar</string>
+
+    <string name="settings_title">Configurações</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_color">Cor do aplicativo</string>
+
+    <string name="choose_theme">Escolha o tema</string>
+    <string name="light_mode">Modo Claro</string>
+    <string name="dark_mode">Modo Noturno</string>
+
+    <string name="choose_color">Escolha a cor</string>
+    <string name="color_blue">Azul</string>
+    <string name="color_green">Verde</string>
+    <string name="color_orange">Laranja</string>
+
+    <string-array name="settings_options">
+        <item>@string/settings_theme</item>
+        <item>@string/settings_color</item>
+    </string-array>
+
+    <string-array name="theme_options">
+        <item>@string/light_mode</item>
+        <item>@string/dark_mode</item>
+    </string-array>
+
+    <string-array name="color_options">
+        <item>@string/color_blue</item>
+        <item>@string/color_green</item>
+        <item>@string/color_orange</item>
+    </string-array>
 
 </resources>
