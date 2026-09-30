@@ -1,57 +1,184 @@
 package com.example.drawerlayout;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.SavedStateHandle;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class SharedViewModel extends ViewModel {
+public class SharedViewModel extends AndroidViewModel {
 
-    // Mantido temporariamente para as telas antigas continuarem compilando.
-    private final MutableLiveData<String> familiaSelecionada =
-            new MutableLiveData<>();
+    private static final String CHAVE_FAMILIA_ID = "familia_selecionada_id";
 
-    // Novo contrato do catálogo.
-    private final MutableLiveData<List<Familia>> familias =
-            new MutableLiveData<>(new ArrayList<>());
+    private final FamiliaDao familiaDao;
 
-    private final MutableLiveData<Long> familiaSelecionadaId =
-            new MutableLiveData<>(ContratoApp.FAMILIA_INICIAL_ID);
+    private final SavedStateHandle savedStateHandle;
 
-    private final MutableLiveData<List<Instrumento>> instrumentos =
-            new MutableLiveData<>(new ArrayList<>());
+    private final LiveData<List<Familia>> familias;
+    private final LiveData<EstadoOperacao> estadoCatalogo;
 
-    private final MutableLiveData<List<Instrumento>> variacoes =
-            new MutableLiveData<>(new ArrayList<>());
+    private final MediatorLiveData<List<Instrumento>> instrumentos =
+            new MediatorLiveData<>();
 
-    private final MutableLiveData<EstadoOperacao> estadoCatalogo =
-            new MutableLiveData<>(
-                    EstadoOperacao.erro(
-                            "NAO_IMPLEMENTADO",
-                            "Catálogo ainda não conectado ao banco."
-                    )
-            );
+    private final MediatorLiveData<List<Instrumento>> variacoes =
+            new MediatorLiveData<>();
+
+    private LiveData<FamiliaComInstrumentos> fonteFamiliaAtual;
 
     // Compatibilidade temporária com o código antigo.
+    private final MediatorLiveData<String> familiaSelecionada =
+            new MediatorLiveData<>();
 
-    public LiveData<String> getFamiliaSelecionada() {
-        return familiaSelecionada;
+    public SharedViewModel(
+            @NonNull Application application,
+            SavedStateHandle savedStateHandle
+    ) {
+        super(application);
+
+        this.savedStateHandle = savedStateHandle;
+
+        if (!savedStateHandle.contains(CHAVE_FAMILIA_ID)) {
+            savedStateHandle.set(
+                    CHAVE_FAMILIA_ID,
+                    ContratoApp.FAMILIA_INICIAL_ID
+            );
+        }
+
+        AppDatabase banco =
+                AppDatabase.getInstance(application);
+
+        familiaDao = banco.familiaDao();
+
+        familias = familiaDao.observarFamilias();
+
+        estadoCatalogo =
+                AppDatabase.getEstadoInicializacao();
+
+        instrumentos.setValue(new ArrayList<>());
+        variacoes.setValue(new ArrayList<>());
+
+        configurarFamiliaSelecionada();
     }
 
-    public void setFamiliaSelecionada(String familia) {
-        familiaSelecionada.setValue(familia);
+    private void configurarFamiliaSelecionada() {
+        LiveData<Long> familiaId =
+                savedStateHandle.getLiveData(
+                        CHAVE_FAMILIA_ID,
+                        ContratoApp.FAMILIA_INICIAL_ID
+                );
+
+        instrumentos.addSource(
+                familiaId,
+                id -> {
+                    if (id != null) {
+                        observarFamilia(id);
+                    }
+                }
+        );
+
+        familiaSelecionada.addSource(
+                familiaId,
+                id -> familiaSelecionada.setValue(
+                        nomeFamilia(id)
+                )
+        );
+
+        familiaSelecionada.addSource(
+                familias,
+                lista -> {
+                    Long id = familiaId.getValue();
+
+                    if (id != null) {
+                        familiaSelecionada.setValue(
+                                nomeFamilia(id)
+                        );
+                    }
+                }
+        );
     }
 
-    // Novo contrato.
+    private void observarFamilia(long familiaId) {
+        if (fonteFamiliaAtual != null) {
+            instrumentos.removeSource(fonteFamiliaAtual);
+            variacoes.removeSource(fonteFamiliaAtual);
+        }
+
+        fonteFamiliaAtual =
+                familiaDao.observarFamiliaComInstrumentos(
+                        familiaId
+                );
+
+        instrumentos.addSource(
+                fonteFamiliaAtual,
+                familiaComInstrumentos ->
+                        atualizarListas(
+                                familiaComInstrumentos
+                        )
+        );
+
+        variacoes.addSource(
+                fonteFamiliaAtual,
+                familiaComInstrumentos ->
+                        atualizarListas(
+                                familiaComInstrumentos
+                        )
+        );
+    }
+
+    private void atualizarListas(
+            FamiliaComInstrumentos familiaComInstrumentos
+    ) {
+        List<Instrumento> principais =
+                new ArrayList<>();
+
+        List<Instrumento> listaVariacoes =
+                new ArrayList<>();
+
+        if (familiaComInstrumentos != null
+                && familiaComInstrumentos.instrumentos != null) {
+
+            for (Instrumento instrumento :
+                    familiaComInstrumentos.instrumentos) {
+
+                if (instrumento.variacao) {
+                    listaVariacoes.add(instrumento);
+                } else {
+                    principais.add(instrumento);
+                }
+            }
+        }
+
+        principais.sort(
+                Comparator.comparingInt(
+                        instrumento -> instrumento.ordem
+                )
+        );
+
+        listaVariacoes.sort(
+                Comparator.comparingInt(
+                        instrumento -> instrumento.ordem
+                )
+        );
+
+        instrumentos.setValue(principais);
+        variacoes.setValue(listaVariacoes);
+    }
 
     public LiveData<List<Familia>> getFamilias() {
         return familias;
     }
 
     public LiveData<Long> getFamiliaSelecionadaId() {
-        return familiaSelecionadaId;
+        return savedStateHandle.getLiveData(
+                CHAVE_FAMILIA_ID,
+                ContratoApp.FAMILIA_INICIAL_ID
+        );
     }
 
     public LiveData<List<Instrumento>> getInstrumentos() {
@@ -67,6 +194,63 @@ public class SharedViewModel extends ViewModel {
     }
 
     public void selecionarFamilia(long familiaId) {
-        familiaSelecionadaId.setValue(familiaId);
+        savedStateHandle.set(
+                CHAVE_FAMILIA_ID,
+                familiaId
+        );
+    }
+
+    // Métodos antigos mantidos temporariamente.
+
+    public LiveData<String> getFamiliaSelecionada() {
+        return familiaSelecionada;
+    }
+
+    public void setFamiliaSelecionada(String familia) {
+        if (familia == null) {
+            return;
+        }
+
+        switch (familia.toLowerCase()) {
+            case "corda":
+            case "cordas":
+                selecionarFamilia(1L);
+                break;
+
+            case "sopro":
+                selecionarFamilia(2L);
+                break;
+
+            case "percussão":
+            case "percussao":
+                selecionarFamilia(3L);
+                break;
+        }
+    }
+
+    private String nomeFamilia(Long id) {
+        List<Familia> lista = familias.getValue();
+
+        if (lista != null) {
+            for (Familia familia : lista) {
+                if (familia.id == id) {
+                    return familia.nome;
+                }
+            }
+        }
+
+        if (id == 1L) {
+            return "Corda";
+        }
+
+        if (id == 2L) {
+            return "Sopro";
+        }
+
+        if (id == 3L) {
+            return "Percussão";
+        }
+
+        return "";
     }
 }
