@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="auth_titulo">Entrar</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_senha">Senha</string>
+    <string name="auth_entrar">Entrar</string>
+    <string name="auth_cadastrar">Criar conta</string>
+    <string name="auth_campos_obrigatorios">Preencha email e senha.</string>
+
+</resources>
