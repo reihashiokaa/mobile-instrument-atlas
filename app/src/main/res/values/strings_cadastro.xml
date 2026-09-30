@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cadastro_titulo_novo">Novo Cadastro</string>
+    <string name="cadastro_titulo_editar">Editar Perfil</string>
+    <string name="cadastro_nome_hint">Nome completo</string>
+    <string name="cadastro_email_hint">E-mail</string>
+    <string name="cadastro_senha_hint">Senha</string>
+    <string name="cadastro_ajuda_senha">Deixe em branco para manter a senha atual.</string>
+    <string name="cadastro_btn_camera">Tirar Foto</string>
+    <string name="cadastro_btn_trocar_foto">Trocar Foto</string>
+    <string name="cadastro_btn_cancelar">Cancelar</string>
+    <string name="cadastro_btn_salvar">Salvar</string>
+    <string name="cadastro_erro_permissao">Permissão de câmera necessária.</string>
+    <string name="cadastro_erro_armazenamento">Erro ao acessar o armazenamento do dispositivo.</string>
+    <string name="cadastro_erro_arquivo">Erro ao criar arquivo da foto.</string>
+    <string name="cadastro_erro_sem_camera">Nenhum aplicativo de câmera encontrado.</string>
+    <string name="cadastro_cancelou_captura">Captura de foto cancelada.</string>
+    <string name="cadastro_sucesso">Operação realizada com sucesso!</string>
+</resources>
