@@ -7,5 +7,9 @@
     <string name="auth_entrar">Entrar</string>
     <string name="auth_cadastrar">Criar conta</string>
     <string name="auth_campos_obrigatorios">Preencha email e senha.</string>
+    <string name="auth_editar_perfil">Editar perfil</string>
+    <string name="auth_sair">Sair</string>
+    <string name="auth_foto_perfil">Foto do perfil</string>
+    <string name="auth_erro_logout">Não foi possível sair.</string>
 
 </resources>
