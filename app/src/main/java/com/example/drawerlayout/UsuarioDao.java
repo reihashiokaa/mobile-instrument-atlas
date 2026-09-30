@@ -42,4 +42,7 @@ public interface UsuarioDao {
             String senhaHash,
             byte[] foto
     );
+
+    @Query("SELECT * FROM usuarios WHERE sessao_ativa = 1 LIMIT 1")
+    Usuario buscarUsuarioAtivo();
 }
