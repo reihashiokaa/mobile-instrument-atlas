@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,8 @@ public class DetailActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
 
     private DetalheViewModel detalheViewModel;
+
+    private Button buttonPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,32 +38,62 @@ public class DetailActivity extends AppCompatActivity {
         Button buttonClose =
                 findViewById(R.id.buttonClose);
 
-        Button buttonPlay =
+        buttonPlay =
                 findViewById(R.id.buttonPlay);
 
-        // Pega o ID do instrumento enviado pelo fragment
+        // Pega o ID do instrumento enviado pelo Fragment
         long instrumentoId =
                 getIntent().getLongExtra(
                         ContratoApp.EXTRA_INSTRUMENTO_ID,
                         -1L
                 );
 
+        // Verifica se o ID é válido
+        if (instrumentoId <= 0) {
+
+            Toast.makeText(
+                    this,
+                    "Instrumento inválido.",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            finish();
+            return;
+        }
+
         // Cria o ViewModel da tela de detalhes
         detalheViewModel =
                 new ViewModelProvider(this)
                         .get(DetalheViewModel.class);
+
+        // Inicialmente esconde o botão de áudio
+        buttonPlay.setVisibility(View.GONE);
 
         // Observa o instrumento carregado pelo Room
         detalheViewModel.getInstrumento().observe(
                 this,
                 instrumento -> {
 
+                    // Instrumento não encontrado
                     if (instrumento == null) {
+
+                        Toast.makeText(
+                                this,
+                                "Instrumento não encontrado.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        liberarMediaPlayer();
+
+                        finish();
+
                         return;
                     }
 
                     // Mostra o nome
-                    textTitle.setText(instrumento.nome);
+                    textTitle.setText(
+                            instrumento.nome
+                    );
 
                     // Mostra os detalhes
                     textDescription.setText(
@@ -73,58 +106,74 @@ public class DetailActivity extends AppCompatActivity {
                             instrumento.imagemUri
                     );
 
-                    // Verifica se existe áudio
+                    // Verifica se o instrumento possui áudio
                     if (instrumento.audioUri == null
                             || instrumento.audioUri.isEmpty()) {
 
                         buttonPlay.setVisibility(View.GONE);
 
-                    } else {
-
-                        buttonPlay.setVisibility(View.VISIBLE);
-
-                        buttonPlay.setOnClickListener(
-                                view -> {
-
-                                    // Libera uma reprodução anterior
-                                    if (mediaPlayer != null) {
-                                        mediaPlayer.release();
-                                    }
-
-                                    try {
-
-                                        mediaPlayer =
-                                                MediaPlayer.create(
-                                                        this,
-                                                        Uri.parse(
-                                                                instrumento.audioUri
-                                                        )
-                                                );
-
-                                        if (mediaPlayer != null) {
-                                            mediaPlayer.start();
-                                        }
-
-                                    } catch (Exception e) {
-
-                                        if (mediaPlayer != null) {
-                                            mediaPlayer.release();
-                                            mediaPlayer = null;
-                                        }
-                                    }
-                                }
-                        );
+                        return;
                     }
+
+                    // Mostra o botão de áudio
+                    buttonPlay.setVisibility(View.VISIBLE);
+
+                    // Define o clique do botão Play
+                    buttonPlay.setOnClickListener(
+                            view -> {
+
+                                // Libera um áudio anterior
+                                liberarMediaPlayer();
+
+                                try {
+
+                                    mediaPlayer =
+                                            MediaPlayer.create(
+                                                    this,
+                                                    Uri.parse(
+                                                            instrumento.audioUri
+                                                    )
+                                            );
+
+                                    // Verifica se o player foi criado
+                                    if (mediaPlayer == null) {
+
+                                        Toast.makeText(
+                                                this,
+                                                "Áudio indisponível.",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+
+                                        return;
+                                    }
+
+                                    // Libera o player quando o áudio terminar
+                                    mediaPlayer.setOnCompletionListener(
+                                            player -> liberarMediaPlayer()
+                                    );
+
+                                    // Começa a reprodução
+                                    mediaPlayer.start();
+
+                                } catch (Exception e) {
+
+                                    liberarMediaPlayer();
+
+                                    Toast.makeText(
+                                            this,
+                                            "Não foi possível reproduzir o áudio.",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            }
+                    );
                 }
         );
 
         // Carrega o instrumento pelo ID
-        if (instrumentoId != -1L) {
-
-            detalheViewModel.carregarInstrumento(
-                    instrumentoId
-            );
-        }
+        detalheViewModel.carregarInstrumento(
+                instrumentoId
+        );
 
         // Fecha a tela de detalhes
         buttonClose.setOnClickListener(
@@ -132,20 +181,40 @@ public class DetailActivity extends AppCompatActivity {
         );
     }
 
-    @Override
-    protected void onDestroy() {
+    // Libera o MediaPlayer com segurança
+    private void liberarMediaPlayer() {
 
-        super.onDestroy();
-
-        // Libera o áudio quando a Activity é destruída
         if (mediaPlayer != null) {
 
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
+            try {
+
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+
+            } catch (Exception e) {
+                // O player pode já ter sido liberado.
             }
 
             mediaPlayer.release();
             mediaPlayer = null;
         }
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+
+        // Interrompe o áudio quando a Activity deixa de estar visível
+        liberarMediaPlayer();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        liberarMediaPlayer();
+
+        super.onDestroy();
     }
 }

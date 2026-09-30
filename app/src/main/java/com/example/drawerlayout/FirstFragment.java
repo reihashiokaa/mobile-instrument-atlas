@@ -19,8 +19,11 @@ public class FirstFragment extends Fragment {
     private Spinner spinner;
     private FragmentFirstBinding binding;
 
-    // viewmodel compartilhado com os outros fragments
+    // ViewModel compartilhado com os outros fragments
     private SharedViewModel sharedViewModel;
+
+    // Adapter do Spinner
+    private ArrayAdapter<Familia> adapter;
 
     @Override
     public View onCreateView(
@@ -29,57 +32,128 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentFirstBinding.inflate(
+                inflater,
+                container,
+                false
+        );
+
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            Bundle savedInstanceState
+    ) {
+
         super.onViewCreated(view, savedInstanceState);
 
-        // pega o mesmo ViewModel usado pelos outros fragments
-        sharedViewModel = new ViewModelProvider(requireActivity())
-                .get(SharedViewModel.class);
+        // Pega o mesmo ViewModel usado pelos outros fragments
+        sharedViewModel =
+                new ViewModelProvider(requireActivity())
+                        .get(SharedViewModel.class);
 
+        // Pega o Spinner pelo ViewBinding
         spinner = binding.familia;
 
-        // carrega as famílias definidas no strings.xml
-        ArrayAdapter<CharSequence> adapter =
-                ArrayAdapter.createFromResource(
-                        requireContext(),
-                        R.array.familia,
-                        android.R.layout.simple_spinner_item
-                );
+        // Cria o adapter vazio.
+        // Os dados serão carregados pelo Room.
+        adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item
+        );
 
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item
         );
 
+        // Coloca o adapter no Spinner
         spinner.setAdapter(adapter);
 
-        // avisa o ViewModel sempre que o usuário escolher outra família
+        // Observa as famílias vindas do Room
+        sharedViewModel.getFamilias().observe(
+                getViewLifecycleOwner(),
+                familias -> {
+
+                    adapter.clear();
+
+                    if (familias != null) {
+                        adapter.addAll(familias);
+                    }
+
+                    adapter.notifyDataSetChanged();
+                }
+        );
+
+        // Observa a família selecionada pelo ViewModel
+        sharedViewModel.getFamiliaSelecionadaId().observe(
+                getViewLifecycleOwner(),
+                familiaId -> {
+
+                    if (familiaId == null) {
+                        return;
+                    }
+
+                    // Procura a família pelo ID,
+                    // e não pela posição ou pelo nome.
+                    for (int i = 0; i < adapter.getCount(); i++) {
+
+                        Familia familia = adapter.getItem(i);
+
+                        if (familia != null
+                                && familia.id == familiaId) {
+
+                            if (spinner.getSelectedItemPosition() != i) {
+                                spinner.setSelection(i);
+                            }
+
+                            break;
+                        }
+                    }
+                }
+        );
+
+        // Trata a seleção de uma família
         spinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
 
                     @Override
                     public void onItemSelected(
-                            AdapterView<?> adapterView,
+                            AdapterView<?> parent,
                             View view,
                             int position,
                             long id
                     ) {
 
-                        // pega o nome da família escolhida
-                        String familia =
-                                adapterView.getItemAtPosition(position).toString();
+                        Familia familia =
+                                adapter.getItem(position);
 
-                        // atualiza o valor compartilhado entre os fragments
-                        sharedViewModel.setFamiliaSelecionada(familia);
+                        if (familia == null) {
+                            return;
+                        }
+
+                        // Só atualiza o ViewModel se o ID
+                        // realmente for diferente do atual.
+                        Long familiaSelecionadaId =
+                                sharedViewModel
+                                        .getFamiliaSelecionadaId()
+                                        .getValue();
+
+                        if (familiaSelecionadaId == null
+                                || familiaSelecionadaId != familia.id) {
+
+                            sharedViewModel.selecionarFamilia(
+                                    familia.id
+                            );
+                        }
                     }
 
                     @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                        // não precisa fazer nada
+                    public void onNothingSelected(
+                            AdapterView<?> parent
+                    ) {
+                        // Não precisa fazer nada.
                     }
                 }
         );
@@ -87,9 +161,10 @@ public class FirstFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
 
-        // libera a referência da view quando o fragment for destruído
+        // Libera a referência da View
         binding = null;
     }
 }
