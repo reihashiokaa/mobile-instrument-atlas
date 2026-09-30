@@ -8,16 +8,32 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GridAdapter extends BaseAdapter {
 
     private Context context;
-    private List<ItemModel> lista;
+    private List<Instrumento> lista;
 
-    public GridAdapter(Context context, List<ItemModel> lista) {
+    public GridAdapter(Context context, List<Instrumento> lista) {
         this.context = context;
-        this.lista = lista;
+
+        if (lista == null) {
+            this.lista = new ArrayList<>();
+        } else {
+            this.lista = new ArrayList<>(lista);
+        }
+    }
+
+    public void atualizarDados(List<Instrumento> itens) {
+        if (itens == null) {
+            this.lista = new ArrayList<>();
+        } else {
+            this.lista = new ArrayList<>(itens);
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -26,33 +42,31 @@ public class GridAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Instrumento getItem(int position) {
         return lista.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return lista.get(position).id;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        // cria cada item usando o layout da grade
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
                     .inflate(R.layout.item_grid, parent, false);
         }
 
-        // pega o item da posição atual
-        ItemModel item = lista.get(position);
+        Instrumento item = lista.get(position);
 
         ImageView imagem = convertView.findViewById(R.id.imageGrid);
         TextView nome = convertView.findViewById(R.id.textGrid);
 
-        // mostra a imagem e o nome na grade
-        imagem.setImageResource(item.getImagemResId());
-        nome.setText(item.getNome());
+        MidiaUtils.carregarImagem(imagem, item.imagemUri);
+
+        nome.setText(item.nome);
 
         return convertView;
     }
