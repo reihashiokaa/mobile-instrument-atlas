@@ -1,10 +1,10 @@
 package com.example.drawerlayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,20 +13,29 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.drawerlayout.databinding.FragmentThirdBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ThirdFragment extends Fragment {
 
     private FragmentThirdBinding binding;
+
+    // ViewModel compartilhado pelos fragments
     private SharedViewModel sharedViewModel;
+
+    // Adapter responsável pelo GridView
+    private GridAdapter adapter;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater,
             ViewGroup container,
-            Bundle savedInstanceState) {
+            Bundle savedInstanceState
+    ) {
 
-        binding = FragmentThirdBinding.inflate(inflater, container, false);
+        binding = FragmentThirdBinding.inflate(
+                inflater,
+                container,
+                false
+        );
 
         return binding.getRoot();
     }
@@ -34,140 +43,54 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onViewCreated(
             @NonNull View view,
-            Bundle savedInstanceState) {
+            Bundle savedInstanceState
+    ) {
 
         super.onViewCreated(view, savedInstanceState);
 
-        // usa o mesmo ViewModel compartilhado pelos fragments
+        // Pega o mesmo ViewModel compartilhado pelos fragments
         sharedViewModel =
                 new ViewModelProvider(requireActivity())
                         .get(SharedViewModel.class);
 
-        // atualiza a grade quando a família do Spinner mudar
-        sharedViewModel.getFamiliaSelecionada()
-                .observe(getViewLifecycleOwner(), this::atualizarGrid);
-    }
+        // Cria o adapter inicialmente vazio
+        adapter = new GridAdapter(
+                requireContext(),
+                new ArrayList<>()
+        );
 
-    private void atualizarGrid(String familia) {
-
-        // famílias definidas no strings.xml
-        String[] familias = getResources()
-                .getStringArray(R.array.familia);
-
-        // lista que recebe as variações da família escolhida
-        List<ItemModel> itens = new ArrayList<>();
-
-        // CORDA
-        if (familia.equals(familias[0])) {
-
-            itens.add(new ItemModel(
-                    R.drawable.violino_eletrico,
-                    getString(R.string.violino_eletrico_nome),
-                    getString(R.string.violino_eletrico_descricao),
-                    getString(R.string.violino_eletrico_detalhes)
-            ));
-
-            itens.add(new ItemModel(
-                    R.drawable.violao_12_cordas,
-                    getString(R.string.violao_12_cordas_nome),
-                    getString(R.string.violao_12_cordas_descricao),
-                    getString(R.string.violao_12_cordas_detalhes)
-            ));
-
-            itens.add(new ItemModel(
-                    R.drawable.harpa_celta,
-                    getString(R.string.harpa_celta_nome),
-                    getString(R.string.harpa_celta_descricao),
-                    getString(R.string.harpa_celta_detalhes)
-            ));
-        }
-
-        // SOPRO
-        else if (familia.equals(familias[1])) {
-
-            itens.add(new ItemModel(
-                    R.drawable.flauta_piccolo,
-                    getString(R.string.flauta_piccolo_nome),
-                    getString(R.string.flauta_piccolo_descricao),
-                    getString(R.string.flauta_piccolo_detalhes)
-            ));
-
-            itens.add(new ItemModel(
-                    R.drawable.clarinete_baixo,
-                    getString(R.string.clarinete_baixo_nome),
-                    getString(R.string.clarinete_baixo_descricao),
-                    getString(R.string.clarinete_baixo_detalhes)
-            ));
-
-            itens.add(new ItemModel(
-                    R.drawable.trompete_piccolo,
-                    getString(R.string.trompete_piccolo_nome),
-                    getString(R.string.trompete_piccolo_descricao),
-                    getString(R.string.trompete_piccolo_detalhes)
-            ));
-        }
-
-        // PERCUSSÃO
-        else if (familia.equals(familias[2])) {
-
-            itens.add(new ItemModel(
-                    R.drawable.bateria_eletronica,
-                    getString(R.string.bateria_eletronica_nome),
-                    getString(R.string.bateria_eletronica_descricao),
-                    getString(R.string.bateria_eletronica_detalhes)
-            ));
-
-            itens.add(new ItemModel(
-                    R.drawable.tambor_africano,
-                    getString(R.string.tambor_africano_nome),
-                    getString(R.string.tambor_africano_descricao),
-                    getString(R.string.tambor_africano_detalhes)
-            ));
-
-            itens.add(new ItemModel(
-                    R.drawable.pandeiro_meia_lua,
-                    getString(R.string.pandeiro_meia_lua_nome),
-                    getString(R.string.pandeiro_meia_lua_descricao),
-                    getString(R.string.pandeiro_meia_lua_detalhes)
-            ));
-        }
-
-        // envia os itens para o GridView
-        GridAdapter adapter =
-                new GridAdapter(requireContext(), itens);
-
+        // Coloca o adapter no GridView
         binding.gridView.setAdapter(adapter);
 
-        // abre a tela de detalhes ao clicar em um item
+        // Observa as variações vindas do Room
+        sharedViewModel.getVariacoes().observe(
+                getViewLifecycleOwner(),
+                lista -> {
+
+                    // Atualiza os dados do adapter
+                    adapter.atualizarDados(lista);
+                }
+        );
+
+        // Trata o clique em uma variação
         binding.gridView.setOnItemClickListener(
-                (parent, view, position, id) -> {
+                (parent, view1, position, id) -> {
 
-                    ItemModel item = itens.get(position);
+                    // Pega o instrumento clicado
+                    Instrumento instrumento =
+                            adapter.getItem(position);
 
+                    // Cria a Intent para a tela de detalhes
                     Intent intent =
                             new Intent(
                                     requireContext(),
                                     DetailActivity.class
                             );
 
+                    // Envia somente o ID do instrumento
                     intent.putExtra(
-                            "nome",
-                            item.getNome()
-                    );
-
-                    intent.putExtra(
-                            "descricao",
-                            item.getDescricao()
-                    );
-
-                    intent.putExtra(
-                            "detalhes",
-                            item.getDetalhes()
-                    );
-
-                    intent.putExtra(
-                            "imagem",
-                            item.getImagemResId()
+                            ContratoApp.EXTRA_INSTRUMENTO_ID,
+                            instrumento.id
                     );
 
                     startActivity(intent);
@@ -177,8 +100,10 @@ public class ThirdFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
 
+        // Evita manter referência da View
         binding = null;
     }
 }
