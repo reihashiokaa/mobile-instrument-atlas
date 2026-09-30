@@ -1,91 +1,149 @@
 package com.example.drawerlayout;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
 
-import android.media.MediaPlayer;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 public class DetailActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
 
+    private DetalheViewModel detalheViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_detail);
 
-        ImageView imageDetail = findViewById(R.id.imageDetail);
-        TextView textTitle = findViewById(R.id.textTitle);
-        TextView textDescription = findViewById(R.id.textDescription);
-        Button buttonClose = findViewById(R.id.buttonClose);
-        Button buttonPlay = findViewById(R.id.buttonPlay);
+        ImageView imageDetail =
+                findViewById(R.id.imageDetail);
 
+        TextView textTitle =
+                findViewById(R.id.textTitle);
 
-        // recebe os dados enviados pelo fragment
-        String nome = getIntent().getStringExtra("nome");
-        String descricao = getIntent().getStringExtra("descricao");
-        String detalhes = getIntent().getStringExtra("detalhes");
-        int imagem = getIntent().getIntExtra("imagem", 0);
-        int som = getIntent().getIntExtra("som", 0);
-        // esconde o botão quando o item não possui áudio
-        if (som == 0) {
-            buttonPlay.setVisibility(View.GONE);
-        }
+        TextView textDescription =
+                findViewById(R.id.textDescription);
 
-        // coloca os dados na tela
-        textTitle.setText(nome);
-        if (detalhes != null) {
-            textDescription.setText(detalhes);
-        } else {
-            textDescription.setText(descricao);
-        }
+        Button buttonClose =
+                findViewById(R.id.buttonClose);
 
-        if (imagem != 0) {
-            imageDetail.setImageResource(imagem);
-        }
+        Button buttonPlay =
+                findViewById(R.id.buttonPlay);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        // Pega o ID do instrumento enviado pelo fragment
+        long instrumentoId =
+                getIntent().getLongExtra(
+                        ContratoApp.EXTRA_INSTRUMENTO_ID,
+                        -1L
+                );
 
-        // reproduz o som do instrumento
-        buttonPlay.setOnClickListener(view -> {
+        // Cria o ViewModel da tela de detalhes
+        detalheViewModel =
+                new ViewModelProvider(this)
+                        .get(DetalheViewModel.class);
 
-            if (som != 0) {
+        // Observa o instrumento carregado pelo Room
+        detalheViewModel.getInstrumento().observe(
+                this,
+                instrumento -> {
 
-                // libera uma reprodução anterior, caso exista
-                if (mediaPlayer != null) {
-                    mediaPlayer.release();
+                    if (instrumento == null) {
+                        return;
+                    }
+
+                    // Mostra o nome
+                    textTitle.setText(instrumento.nome);
+
+                    // Mostra os detalhes
+                    textDescription.setText(
+                            instrumento.detalhes
+                    );
+
+                    // Carrega a imagem
+                    MidiaUtils.carregarImagem(
+                            imageDetail,
+                            instrumento.imagemUri
+                    );
+
+                    // Verifica se existe áudio
+                    if (instrumento.audioUri == null
+                            || instrumento.audioUri.isEmpty()) {
+
+                        buttonPlay.setVisibility(View.GONE);
+
+                    } else {
+
+                        buttonPlay.setVisibility(View.VISIBLE);
+
+                        buttonPlay.setOnClickListener(
+                                view -> {
+
+                                    // Libera uma reprodução anterior
+                                    if (mediaPlayer != null) {
+                                        mediaPlayer.release();
+                                    }
+
+                                    try {
+
+                                        mediaPlayer =
+                                                MediaPlayer.create(
+                                                        this,
+                                                        Uri.parse(
+                                                                instrumento.audioUri
+                                                        )
+                                                );
+
+                                        if (mediaPlayer != null) {
+                                            mediaPlayer.start();
+                                        }
+
+                                    } catch (Exception e) {
+
+                                        if (mediaPlayer != null) {
+                                            mediaPlayer.release();
+                                            mediaPlayer = null;
+                                        }
+                                    }
+                                }
+                        );
+                    }
                 }
+        );
 
-                mediaPlayer = MediaPlayer.create(this, som);
-                mediaPlayer.start();
-            }
-        });
+        // Carrega o instrumento pelo ID
+        if (instrumentoId != -1L) {
 
-        // fecha a tela de detalhes e volta para a tela principal
-        buttonClose.setOnClickListener(view -> finish());
+            detalheViewModel.carregarInstrumento(
+                    instrumentoId
+            );
+        }
+
+        // Fecha a tela de detalhes
+        buttonClose.setOnClickListener(
+                view -> finish()
+        );
     }
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
 
-        // interrompe e libera o áudio ao fechar a Activity
+        // Libera o áudio quando a Activity é destruída
         if (mediaPlayer != null) {
-            mediaPlayer.stop();
+
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+
             mediaPlayer.release();
             mediaPlayer = null;
         }
