@@ -13,7 +13,7 @@ public final class SenhaUtils {
     private static final String ALGORITMO = "PBKDF2WithHmacSHA256";
     private static final String PREFIXO = "pbkdf2_sha256";
 
-    private static final int ITERACOES = 600_000;
+    private static final int ITERACOES = 100_000;
     private static final int TAMANHO_SALT = 16;
     private static final int TAMANHO_HASH_BITS = 256;
 
