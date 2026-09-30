@@ -41,14 +41,12 @@ public class DetailActivity extends AppCompatActivity {
         buttonPlay =
                 findViewById(R.id.buttonPlay);
 
-        // Pega o ID do instrumento enviado pelo Fragment
         long instrumentoId =
                 getIntent().getLongExtra(
                         ContratoApp.EXTRA_INSTRUMENTO_ID,
                         -1L
                 );
 
-        // Verifica se o ID é válido
         if (instrumentoId <= 0) {
 
             Toast.makeText(
@@ -61,20 +59,29 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Cria o ViewModel da tela de detalhes
         detalheViewModel =
                 new ViewModelProvider(this)
                         .get(DetalheViewModel.class);
 
-        // Inicialmente esconde o botão de áudio
+        detalheViewModel.getUsuarioAtivo().observe(
+                this,
+                usuario -> {
+
+                    if (usuario == null) {
+
+                        liberarMediaPlayer();
+
+                        finish();
+                    }
+                }
+        );
+
         buttonPlay.setVisibility(View.GONE);
 
-        // Observa o instrumento carregado pelo Room
         detalheViewModel.getInstrumento().observe(
                 this,
                 instrumento -> {
 
-                    // Instrumento não encontrado
                     if (instrumento == null) {
 
                         Toast.makeText(
@@ -90,39 +97,34 @@ public class DetailActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Mostra o nome
                     textTitle.setText(
                             instrumento.nome
                     );
 
-                    // Mostra os detalhes
                     textDescription.setText(
                             instrumento.detalhes
                     );
 
-                    // Carrega a imagem
                     MidiaUtils.carregarImagem(
                             imageDetail,
                             instrumento.imagemUri
                     );
 
-                    // Verifica se o instrumento possui áudio
                     if (instrumento.audioUri == null
                             || instrumento.audioUri.isEmpty()) {
 
                         buttonPlay.setVisibility(View.GONE);
 
+                        liberarMediaPlayer();
+
                         return;
                     }
 
-                    // Mostra o botão de áudio
                     buttonPlay.setVisibility(View.VISIBLE);
 
-                    // Define o clique do botão Play
                     buttonPlay.setOnClickListener(
                             view -> {
 
-                                // Libera um áudio anterior
                                 liberarMediaPlayer();
 
                                 try {
@@ -135,7 +137,6 @@ public class DetailActivity extends AppCompatActivity {
                                                     )
                                             );
 
-                                    // Verifica se o player foi criado
                                     if (mediaPlayer == null) {
 
                                         Toast.makeText(
@@ -147,12 +148,10 @@ public class DetailActivity extends AppCompatActivity {
                                         return;
                                     }
 
-                                    // Libera o player quando o áudio terminar
                                     mediaPlayer.setOnCompletionListener(
                                             player -> liberarMediaPlayer()
                                     );
 
-                                    // Começa a reprodução
                                     mediaPlayer.start();
 
                                 } catch (Exception e) {
@@ -170,18 +169,15 @@ public class DetailActivity extends AppCompatActivity {
                 }
         );
 
-        // Carrega o instrumento pelo ID
         detalheViewModel.carregarInstrumento(
                 instrumentoId
         );
 
-        // Fecha a tela de detalhes
         buttonClose.setOnClickListener(
                 view -> finish()
         );
     }
 
-    // Libera o MediaPlayer com segurança
     private void liberarMediaPlayer() {
 
         if (mediaPlayer != null) {
@@ -197,6 +193,7 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             mediaPlayer.release();
+
             mediaPlayer = null;
         }
     }
@@ -206,7 +203,6 @@ public class DetailActivity extends AppCompatActivity {
 
         super.onStop();
 
-        // Interrompe o áudio quando a Activity deixa de estar visível
         liberarMediaPlayer();
     }
 

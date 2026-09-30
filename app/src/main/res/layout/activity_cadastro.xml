@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/cadastro_senha_hint"
             android:inputType="textPassword"
+            android:saveEnabled="false"
             android:layout_marginBottom="8dp" />
 
         <TextView
@@ -94,6 +95,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cadastro_btn_salvar" />
+
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>

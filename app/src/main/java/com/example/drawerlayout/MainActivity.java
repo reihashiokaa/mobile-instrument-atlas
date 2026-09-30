@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Menu menuPrincipal;
 
     private boolean autenticado;
+    private boolean reiniciandoParaLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.getUsuarioAtivo().observe(
                 this,
                 usuario -> {
+
                     if (usuario == null) {
                         autenticado = false;
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                                 .getId()
                                 != R.id.loginFragment) {
 
-                            redefinirParaLogin();
+                            reiniciarNoLogin();
                         }
 
                         return;
@@ -162,14 +163,23 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.getEstadoLogout().observe(
                 this,
                 estado -> {
+
                     if (estado == null) {
                         return;
                     }
 
                     switch (estado.status) {
+
                         case SUCESSO:
+                            autenticado = false;
+
+                            mostrarInterfaceLogin();
+                            atualizarMenu();
+
                             authViewModel
                                     .limparEstadoLogout();
+
+                            reiniciarNoLogin();
                             break;
 
                         case ERRO:
@@ -198,10 +208,33 @@ public class MainActivity extends AppCompatActivity {
                             && destination.getId()
                             != R.id.loginFragment) {
 
-                        redefinirParaLogin();
+                        reiniciarNoLogin();
                     }
                 }
         );
+    }
+
+    private void reiniciarNoLogin() {
+        if (reiniciandoParaLogin) {
+            return;
+        }
+
+        reiniciandoParaLogin = true;
+
+        Intent intent =
+                new Intent(
+                        this,
+                        MainActivity.class
+                );
+
+        intent.addFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+        );
+
+        startActivity(intent);
+
+        finish();
     }
 
     private void mostrarInterfaceLogin() {
@@ -249,19 +282,6 @@ public class MainActivity extends AppCompatActivity {
                     R.mipmap.ic_launcher
             );
         }
-    }
-
-    private void redefinirParaLogin() {
-        NavGraph grafo =
-                navController
-                        .getNavInflater()
-                        .inflate(R.navigation.nav_graph);
-
-        grafo.setStartDestination(
-                R.id.loginFragment
-        );
-
-        navController.setGraph(grafo);
     }
 
     private void abrirEdicaoPerfil() {
@@ -354,6 +374,7 @@ public class MainActivity extends AppCompatActivity {
                 .setItems(
                         opcoes,
                         (dialog, which) -> {
+
                             if (which == 0) {
                                 mostrarTemas();
                             } else {
@@ -376,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
                 .setItems(
                         temas,
                         (dialog, which) -> {
+
                             if (which == 0) {
                                 AppCompatDelegate
                                         .setDefaultNightMode(
