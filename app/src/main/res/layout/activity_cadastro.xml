@@ -8,70 +8,92 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
         <TextView
             android:id="@+id/textTituloCadastro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cadastro_titulo_novo"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
 
         <ImageView
             android:id="@+id/imageFotoPerfil"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop" />
+            android:background="#E0E0E0"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/buttonCamera"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name" />
+            android:text="@string/cadastro_btn_camera"
+            android:layout_marginBottom="24dp" />
 
         <EditText
             android:id="@+id/editNome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName" />
+            android:hint="@string/cadastro_nome_hint"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="16dp" />
 
         <EditText
             android:id="@+id/editEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/cadastro_email_hint"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="16dp" />
 
         <EditText
             android:id="@+id/editSenha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/cadastro_senha_hint"
             android:inputType="textPassword"
-            android:saveEnabled="false" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/textAjudaSenha"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/buttonSalvar"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name" />
-
-        <Button
-            android:id="@+id/buttonCancelar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name" />
+            android:text="@string/cadastro_ajuda_senha"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp" />
 
         <ProgressBar
             android:id="@+id/progressCadastro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cadastro_btn_cancelar"
+                android:layout_marginEnd="16dp"
+                style="?android:attr/buttonBarButtonStyle" />
+
+            <Button
+                android:id="@+id/buttonSalvar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cadastro_btn_salvar" />
+        </LinearLayout>
     </LinearLayout>
-
 </ScrollView>
