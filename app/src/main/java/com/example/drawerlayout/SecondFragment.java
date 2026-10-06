@@ -19,7 +19,7 @@ public class SecondFragment extends Fragment {
     private SharedViewModel sharedViewModel;
 
     // Adapter responsável pelo ListView
-    private MeuAdapter adapter;
+    private InstrumentoAdapter instrumentoAdapter;
 
     @Override
     public View onCreateView(
@@ -39,20 +39,20 @@ public class SecondFragment extends Fragment {
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         // cria o adapter inicialmente vazio
-        adapter = new MeuAdapter(requireContext(), new ArrayList<>());
+        instrumentoAdapter = new InstrumentoAdapter(requireContext(), new ArrayList<>());
 
         // coloca o adapter no ListView
-        binding.listViewImagens.setAdapter(adapter);
+        binding.listViewImagens.setAdapter(instrumentoAdapter);
 
         // observa os instrumentos vindos do Room
         sharedViewModel
                 .getInstrumentos()
                 .observe(
                         getViewLifecycleOwner(),
-                        lista -> {
+                        instrumentos -> {
 
                             // atualiza os dados do adapter
-                            adapter.atualizarDados(lista);
+                            instrumentoAdapter.atualizarDados(instrumentos);
                         });
 
         // trata o clique em um instrumento
@@ -60,7 +60,7 @@ public class SecondFragment extends Fragment {
                 (parent, view1, position, id) -> {
 
                     // pega o instrumento clicado pelo adapter
-                    Instrumento instrumento = adapter.getItem(position);
+                    Instrumento instrumento = instrumentoAdapter.getItem(position);
 
                     // cria a Intent para a tela de detalhes
                     Intent intent = new Intent(requireContext(), DetailActivity.class);
