@@ -9,10 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.drawerlayout.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -23,6 +19,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import com.example.drawerlayout.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,63 +51,38 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar()
-                    .setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        imageAvatarToolbar =
-                binding.toolbar.findViewById(
-                        R.id.imageAvatarToolbar
-                );
+        imageAvatarToolbar = binding.toolbar.findViewById(R.id.imageAvatarToolbar);
 
-        textNomeToolbar =
-                binding.toolbar.findViewById(
-                        R.id.textNomeToolbar
-                );
+        textNomeToolbar = binding.toolbar.findViewById(R.id.textNomeToolbar);
 
-        usuarioToolbar =
-                binding.toolbar.findViewById(
-                        R.id.usuarioToolbar
-                );
+        usuarioToolbar = binding.toolbar.findViewById(R.id.usuarioToolbar);
 
         NavHostFragment navHostFragment =
                 (NavHostFragment)
                         getSupportFragmentManager()
-                                .findFragmentById(
-                                        R.id.nav_host_fragment_content_main
-                                );
+                                .findFragmentById(R.id.nav_host_fragment_content_main);
 
         if (navHostFragment == null) {
             return;
         }
 
-        navController =
-                navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
 
         appBarConfiguration =
                 new AppBarConfiguration.Builder(
-                        R.id.FirstFragment,
-                        R.id.SecondFragment,
-                        R.id.thirdFragment
-                ).build();
+                                R.id.FirstFragment, R.id.SecondFragment, R.id.thirdFragment)
+                        .build();
 
-        NavigationUI.setupActionBarWithNavController(
-                this,
-                navController,
-                appBarConfiguration
-        );
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        bottomNavigationView =
-                findViewById(R.id.bottomNav);
+        bottomNavigationView = findViewById(R.id.bottomNav);
 
-        NavigationUI.setupWithNavController(
-                bottomNavigationView,
-                navController
-        );
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        authViewModel =
-                new ViewModelProvider(this)
-                        .get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         observarSessao();
         observarLogout();
@@ -117,101 +90,85 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void observarSessao() {
-        authViewModel.getUsuarioAtivo().observe(
-                this,
-                usuario -> {
+        authViewModel
+                .getUsuarioAtivo()
+                .observe(
+                        this,
+                        usuario -> {
+                            if (usuario == null) {
+                                autenticado = false;
 
-                    if (usuario == null) {
-                        autenticado = false;
+                                mostrarInterfaceLogin();
+                                atualizarMenu();
 
-                        mostrarInterfaceLogin();
-                        atualizarMenu();
+                                if (navController.getCurrentDestination() != null
+                                        && navController.getCurrentDestination().getId()
+                                                != R.id.loginFragment) {
 
-                        if (navController.getCurrentDestination() != null
-                                && navController
-                                .getCurrentDestination()
-                                .getId()
-                                != R.id.loginFragment) {
+                                    reiniciarNoLogin();
+                                }
 
-                            reiniciarNoLogin();
-                        }
+                                return;
+                            }
 
-                        return;
-                    }
+                            autenticado = true;
 
-                    autenticado = true;
+                            mostrarInterfaceAutenticada();
+                            atualizarToolbar(usuario);
+                            atualizarMenu();
 
-                    mostrarInterfaceAutenticada();
-                    atualizarToolbar(usuario);
-                    atualizarMenu();
+                            if (navController.getCurrentDestination() != null
+                                    && navController.getCurrentDestination().getId()
+                                            == R.id.loginFragment) {
 
-                    if (navController.getCurrentDestination() != null
-                            && navController
-                            .getCurrentDestination()
-                            .getId()
-                            == R.id.loginFragment) {
-
-                        navController.navigate(
-                                R.id.FirstFragment
-                        );
-                    }
-                }
-        );
+                                navController.navigate(R.id.FirstFragment);
+                            }
+                        });
     }
 
     private void observarLogout() {
-        authViewModel.getEstadoLogout().observe(
-                this,
-                estado -> {
+        authViewModel
+                .getEstadoLogout()
+                .observe(
+                        this,
+                        estado -> {
+                            if (estado == null) {
+                                return;
+                            }
 
-                    if (estado == null) {
-                        return;
-                    }
+                            switch (estado.status) {
+                                case SUCESSO:
+                                    autenticado = false;
 
-                    switch (estado.status) {
+                                    mostrarInterfaceLogin();
+                                    atualizarMenu();
 
-                        case SUCESSO:
-                            autenticado = false;
+                                    authViewModel.limparEstadoLogout();
 
-                            mostrarInterfaceLogin();
-                            atualizarMenu();
+                                    reiniciarNoLogin();
+                                    break;
 
-                            authViewModel
-                                    .limparEstadoLogout();
+                                case ERRO:
+                                    Toast.makeText(this, estado.mensagem, Toast.LENGTH_SHORT)
+                                            .show();
 
-                            reiniciarNoLogin();
-                            break;
+                                    authViewModel.limparEstadoLogout();
+                                    break;
 
-                        case ERRO:
-                            Toast.makeText(
-                                    this,
-                                    estado.mensagem,
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            authViewModel
-                                    .limparEstadoLogout();
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-        );
+                                default:
+                                    break;
+                            }
+                        });
     }
 
     private void protegerDestinos() {
         navController.addOnDestinationChangedListener(
                 (controller, destination, arguments) -> {
-
-                    if (!autenticado
-                            && destination.getId()
-                            != R.id.loginFragment) {
+                    if (!autenticado && destination.getId() != R.id.loginFragment) {
 
                         reiniciarNoLogin();
                     }
-                }
-        );
+                });
     }
 
     private void reiniciarNoLogin() {
@@ -221,16 +178,9 @@ public class MainActivity extends AppCompatActivity {
 
         reiniciandoParaLogin = true;
 
-        Intent intent =
-                new Intent(
-                        this,
-                        MainActivity.class
-                );
+        Intent intent = new Intent(this, MainActivity.class);
 
-        intent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
-        );
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);
 
@@ -238,73 +188,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostrarInterfaceLogin() {
-        bottomNavigationView.setVisibility(
-                View.GONE
-        );
+        bottomNavigationView.setVisibility(View.GONE);
 
-        binding.toolbar.setVisibility(
-                View.GONE
-        );
+        binding.toolbar.setVisibility(View.GONE);
 
-        usuarioToolbar.setVisibility(
-                View.GONE
-        );
+        usuarioToolbar.setVisibility(View.GONE);
     }
 
     private void mostrarInterfaceAutenticada() {
-        bottomNavigationView.setVisibility(
-                View.VISIBLE
-        );
+        bottomNavigationView.setVisibility(View.VISIBLE);
 
-        binding.toolbar.setVisibility(
-                View.VISIBLE
-        );
+        binding.toolbar.setVisibility(View.VISIBLE);
 
-        usuarioToolbar.setVisibility(
-                View.VISIBLE
-        );
+        usuarioToolbar.setVisibility(View.VISIBLE);
     }
 
     private void atualizarToolbar(Usuario usuario) {
         textNomeToolbar.setText(usuario.nome);
 
-        Bitmap foto =
-                FotoUtils.decodificar(
-                        usuario.foto
-                );
+        Bitmap foto = FotoUtils.decodificar(usuario.foto);
 
         if (foto != null) {
-            imageAvatarToolbar.setImageBitmap(
-                    foto
-            );
+            imageAvatarToolbar.setImageBitmap(foto);
         } else {
-            imageAvatarToolbar.setImageResource(
-                    R.mipmap.ic_launcher
-            );
+            imageAvatarToolbar.setImageResource(R.mipmap.ic_launcher);
         }
     }
 
     private void abrirEdicaoPerfil() {
-        Intent intent =
-                new Intent(
-                        this,
-                        CadastroActivity.class
-                );
+        Intent intent = new Intent(this, CadastroActivity.class);
 
-        intent.putExtra(
-                ContratoApp.EXTRA_MODO_EDICAO,
-                true
-        );
+        intent.putExtra(ContratoApp.EXTRA_MODO_EDICAO, true);
 
         startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(
-                R.menu.menu_main,
-                menu
-        );
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
         menuPrincipal = menu;
 
@@ -318,20 +239,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        MenuItem editar =
-                menuPrincipal.findItem(
-                        R.id.action_edit_profile
-                );
+        MenuItem editar = menuPrincipal.findItem(R.id.action_edit_profile);
 
-        MenuItem sair =
-                menuPrincipal.findItem(
-                        R.id.action_logout
-                );
+        MenuItem sair = menuPrincipal.findItem(R.id.action_logout);
 
-        MenuItem configuracoes =
-                menuPrincipal.findItem(
-                        R.id.action_settings
-                );
+        MenuItem configuracoes = menuPrincipal.findItem(R.id.action_settings);
 
         editar.setVisible(autenticado);
         sair.setVisible(autenticado);
@@ -339,9 +251,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(
-            MenuItem item
-    ) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.action_edit_profile) {
@@ -363,70 +273,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void mostrarConfiguracoes() {
-        String[] opcoes =
-                getResources()
-                        .getStringArray(
-                                R.array.settings_options
-                        );
+        String[] opcoes = getResources().getStringArray(R.array.settings_options);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.settings_title)
                 .setItems(
                         opcoes,
                         (dialog, which) -> {
-
                             if (which == 0) {
                                 mostrarTemas();
                             } else {
                                 mostrarCores();
                             }
-                        }
-                )
+                        })
                 .show();
     }
 
     private void mostrarTemas() {
-        String[] temas =
-                getResources()
-                        .getStringArray(
-                                R.array.theme_options
-                        );
+        String[] temas = getResources().getStringArray(R.array.theme_options);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.choose_theme)
                 .setItems(
                         temas,
                         (dialog, which) -> {
-
                             if (which == 0) {
-                                AppCompatDelegate
-                                        .setDefaultNightMode(
-                                                AppCompatDelegate.MODE_NIGHT_NO
-                                        );
+                                AppCompatDelegate.setDefaultNightMode(
+                                        AppCompatDelegate.MODE_NIGHT_NO);
                             } else {
-                                AppCompatDelegate
-                                        .setDefaultNightMode(
-                                                AppCompatDelegate.MODE_NIGHT_YES
-                                        );
+                                AppCompatDelegate.setDefaultNightMode(
+                                        AppCompatDelegate.MODE_NIGHT_YES);
                             }
-                        }
-                )
+                        })
                 .show();
     }
 
     private void mostrarCores() {
-        String[] cores =
-                getResources()
-                        .getStringArray(
-                                R.array.color_options
-                        );
+        String[] cores = getResources().getStringArray(R.array.color_options);
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.choose_color)
                 .setItems(
                         cores,
                         (dialog, which) -> {
-
                             int cor;
 
                             if (which == 0) {
@@ -437,39 +326,20 @@ public class MainActivity extends AppCompatActivity {
                                 cor = R.color.instrument_orange;
                             }
 
-                            binding.toolbar
-                                    .setBackgroundColor(
-                                            ContextCompat
-                                                    .getColor(
-                                                            this,
-                                                            cor
-                                                    )
-                                    );
+                            binding.toolbar.setBackgroundColor(ContextCompat.getColor(this, cor));
 
-                            bottomNavigationView
-                                    .setBackgroundColor(
-                                            ContextCompat
-                                                    .getColor(
-                                                            this,
-                                                            cor
-                                                    )
-                                    );
-                        }
-                )
+                            bottomNavigationView.setBackgroundColor(
+                                    ContextCompat.getColor(this, cor));
+                        })
                 .show();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         NavController controller =
-                Navigation.findNavController(
-                        this,
-                        R.id.nav_host_fragment_content_main
-                );
+                Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
-        return NavigationUI.navigateUp(
-                controller,
-                appBarConfiguration
-        ) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(controller, appBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 }

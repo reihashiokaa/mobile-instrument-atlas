@@ -28,20 +28,13 @@ public interface UsuarioDao {
     int ativarSessao(long id);
 
     @Query(
-            "UPDATE usuarios " +
-                    "SET nome = :nome, " +
-                    "email = :email, " +
-                    "senha_hash = :senhaHash, " +
-                    "foto = :foto " +
-                    "WHERE id = :id AND sessao_ativa = 1"
-    )
-    int atualizarPerfil(
-            long id,
-            String nome,
-            String email,
-            String senhaHash,
-            byte[] foto
-    );
+            "UPDATE usuarios "
+                    + "SET nome = :nome, "
+                    + "email = :email, "
+                    + "senha_hash = :senhaHash, "
+                    + "foto = :foto "
+                    + "WHERE id = :id AND sessao_ativa = 1")
+    int atualizarPerfil(long id, String nome, String email, String senhaHash, byte[] foto);
 
     @Query("SELECT * FROM usuarios WHERE sessao_ativa = 1 LIMIT 1")
     Usuario buscarUsuarioAtivo();

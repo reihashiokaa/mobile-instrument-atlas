@@ -7,11 +7,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "familias")
 public class Familia {
 
-    @PrimaryKey
-    public long id;
+    @PrimaryKey public long id;
 
-    @NonNull
-    public String nome = "";
+    @NonNull public String nome = "";
 
     public int ordem;
 

@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-
 import java.util.List;
 
 @Dao
@@ -20,7 +19,5 @@ public interface FamiliaDao {
 
     @Transaction
     @Query("SELECT * FROM familias WHERE id = :familiaId LIMIT 1")
-    LiveData<FamiliaComInstrumentos> observarFamiliaComInstrumentos(
-            long familiaId
-    );
+    LiveData<FamiliaComInstrumentos> observarFamiliaComInstrumentos(long familiaId);
 }
