@@ -10,7 +10,12 @@ import java.io.IOException;
 public final class FotoUtils {
 
     private static final int TAMANHO_MAXIMO = 512;
-    private static final int TAMANHO_MAXIMO_BYTES = 200 * 1024;
+
+    public static final int TAMANHO_MAXIMO_BYTES = 200 * 1024;
+
+    private static final int QUALIDADE_INICIAL_JPEG = 90;
+    private static final int REDUCAO_QUALIDADE_JPEG = 10;
+    private static final int QUALIDADE_MINIMA_JPEG = 40;
 
     private FotoUtils() {}
 
@@ -123,7 +128,7 @@ public final class FotoUtils {
     }
 
     private static byte[] compactar(Bitmap bitmap) {
-        int qualidade = 90;
+        int qualidade = QUALIDADE_INICIAL_JPEG;
         byte[] bytes;
 
         do {
@@ -132,9 +137,9 @@ public final class FotoUtils {
             bitmap.compress(Bitmap.CompressFormat.JPEG, qualidade, saida);
 
             bytes = saida.toByteArray();
-            qualidade -= 10;
+            qualidade -= REDUCAO_QUALIDADE_JPEG;
 
-        } while (bytes.length > TAMANHO_MAXIMO_BYTES && qualidade >= 40);
+        } while (bytes.length > TAMANHO_MAXIMO_BYTES && qualidade >= QUALIDADE_MINIMA_JPEG);
 
         return bytes;
     }

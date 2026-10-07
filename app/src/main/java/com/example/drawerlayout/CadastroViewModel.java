@@ -129,7 +129,9 @@ public class CadastroViewModel extends AndroidViewModel {
                     try {
                         byte[] bytes = FotoUtils.lerFotoCompactada(caminhoArquivo);
 
-                        if (bytes == null || bytes.length == 0 || bytes.length > 200 * 1024) {
+                        if (bytes == null
+                                || bytes.length == 0
+                                || bytes.length > FotoUtils.TAMANHO_MAXIMO_BYTES) {
 
                             throw new IllegalArgumentException("Foto inválida.");
                         }
