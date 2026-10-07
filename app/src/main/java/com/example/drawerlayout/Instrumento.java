@@ -11,33 +11,25 @@ import androidx.room.PrimaryKey;
 @Entity(
         tableName = "instrumentos",
         foreignKeys = {
-                @ForeignKey(
-                        entity = Familia.class,
-                        parentColumns = "id",
-                        childColumns = "familia_id",
-                        onDelete = ForeignKey.RESTRICT
-                )
+            @ForeignKey(
+                    entity = Familia.class,
+                    parentColumns = "id",
+                    childColumns = "familia_id",
+                    onDelete = ForeignKey.RESTRICT)
         },
-        indices = {
-                @Index("familia_id")
-        }
-)
+        indices = {@Index("familia_id")})
 public class Instrumento {
 
-    @PrimaryKey
-    public long id;
+    @PrimaryKey public long id;
 
     @ColumnInfo(name = "familia_id")
     public long familiaId;
 
-    @NonNull
-    public String nome = "";
+    @NonNull public String nome = "";
 
-    @NonNull
-    public String descricao = "";
+    @NonNull public String descricao = "";
 
-    @NonNull
-    public String detalhes = "";
+    @NonNull public String detalhes = "";
 
     @ColumnInfo(name = "imagem_uri")
     @NonNull

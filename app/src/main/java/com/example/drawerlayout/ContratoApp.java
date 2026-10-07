@@ -9,6 +9,5 @@ public final class ContratoApp {
 
     public static final String BANCO_NOME = "atlas_instrumentos.db";
 
-    private ContratoApp() {
-    }
+    private ContratoApp() {}
 }

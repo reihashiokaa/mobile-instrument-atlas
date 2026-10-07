@@ -10,26 +10,24 @@ import androidx.room.PrimaryKey;
 @Entity(
         tableName = "usuarios",
         indices = {
-                @Index(value = {"email"}, unique = true)
-        }
-)
+            @Index(
+                    value = {"email"},
+                    unique = true)
+        })
 public class Usuario {
 
     @PrimaryKey(autoGenerate = true)
     public long id;
 
-    @NonNull
-    public String nome = "";
+    @NonNull public String nome = "";
 
-    @NonNull
-    public String email = "";
+    @NonNull public String email = "";
 
     @ColumnInfo(name = "senha_hash")
     @NonNull
     public String senhaHash = "";
 
-    @Nullable
-    public byte[] foto;
+    @Nullable public byte[] foto;
 
     @ColumnInfo(name = "sessao_ativa")
     public boolean sessaoAtiva;

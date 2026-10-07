@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +54,7 @@ public class GridAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context)
-                    .inflate(R.layout.item_grid, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_grid, parent, false);
         }
 
         Instrumento item = lista.get(position);

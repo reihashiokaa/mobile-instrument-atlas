@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.diffplug.spotless") version "8.10.2"
 }
 
 android {
@@ -49,4 +50,14 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
+}
+
+spotless {
+    java {
+        target("src/*/java/**/*.java")
+        googleJavaFormat().aosp()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }

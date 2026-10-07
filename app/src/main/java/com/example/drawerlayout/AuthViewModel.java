@@ -1,12 +1,10 @@
 package com.example.drawerlayout;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import java.util.Locale;
 
 public class AuthViewModel extends AndroidViewModel {
@@ -51,98 +49,65 @@ public class AuthViewModel extends AndroidViewModel {
             return;
         }
 
-        String emailNormalizado =
-                email == null
-                        ? ""
-                        : email.trim().toLowerCase(Locale.ROOT);
+        String emailNormalizado = email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
 
-        String senhaInformada =
-                senha == null ? "" : senha;
+        String senhaInformada = senha == null ? "" : senha;
 
-        if (emailNormalizado.isEmpty()
-                || senhaInformada.isEmpty()) {
+        if (emailNormalizado.isEmpty() || senhaInformada.isEmpty()) {
 
-            estadoLogin.setValue(
-                    EstadoOperacao.erro(
-                            "DADOS_INVALIDOS",
-                            "Preencha email e senha."
-                    )
-            );
+            estadoLogin.setValue(EstadoOperacao.erro("DADOS_INVALIDOS", "Preencha email e senha."));
 
             return;
         }
 
         loginEmAndamento = true;
 
-        estadoLogin.setValue(
-                EstadoOperacao.processando()
-        );
+        estadoLogin.setValue(EstadoOperacao.processando());
 
-        AppExecutors.IO.execute(() -> {
-            try {
-                Usuario usuario =
-                        usuarioDao.buscarPorEmail(
-                                emailNormalizado
-                        );
+        AppExecutors.IO.execute(
+                () -> {
+                    try {
+                        Usuario usuario = usuarioDao.buscarPorEmail(emailNormalizado);
 
-                if (usuario == null
-                        || !SenhaUtils.verificar(
-                        senhaInformada,
-                        usuario.senhaHash
-                )) {
+                        if (usuario == null
+                                || !SenhaUtils.verificar(senhaInformada, usuario.senhaHash)) {
 
-                    estadoLogin.postValue(
-                            EstadoOperacao.erro(
-                                    "CREDENCIAIS_INVALIDAS",
-                                    "Email ou senha inválidos."
-                            )
-                    );
+                            estadoLogin.postValue(
+                                    EstadoOperacao.erro(
+                                            "CREDENCIAIS_INVALIDAS", "Email ou senha inválidos."));
 
-                    return;
-                }
+                            return;
+                        }
 
-                banco.runInTransaction(() -> {
-                    Usuario usuarioConfirmado =
-                            usuarioDao.buscarPorId(
-                                    usuario.id
-                            );
+                        banco.runInTransaction(
+                                () -> {
+                                    Usuario usuarioConfirmado = usuarioDao.buscarPorId(usuario.id);
 
-                    if (usuarioConfirmado == null) {
-                        throw new IllegalStateException(
-                                "Usuário não encontrado."
-                        );
-                    }
+                                    if (usuarioConfirmado == null) {
+                                        throw new IllegalStateException("Usuário não encontrado.");
+                                    }
 
-                    usuarioDao.desativarSessoes();
+                                    usuarioDao.desativarSessoes();
 
-                    int alterados =
-                            usuarioDao.ativarSessao(
-                                    usuario.id
-                            );
+                                    int alterados = usuarioDao.ativarSessao(usuario.id);
 
-                    if (alterados != 1) {
-                        throw new IllegalStateException(
-                                "Não foi possível iniciar a sessão."
-                        );
+                                    if (alterados != 1) {
+                                        throw new IllegalStateException(
+                                                "Não foi possível iniciar a sessão.");
+                                    }
+                                });
+
+                        estadoLogin.postValue(EstadoOperacao.sucesso());
+
+                    } catch (Exception e) {
+                        estadoLogin.postValue(
+                                EstadoOperacao.erro(
+                                        "FALHA_INTERNA", "Não foi possível realizar o login."));
+
+                    } finally {
+                        loginEmAndamento = false;
                     }
                 });
-
-                estadoLogin.postValue(
-                        EstadoOperacao.sucesso()
-                );
-
-            } catch (Exception e) {
-                estadoLogin.postValue(
-                        EstadoOperacao.erro(
-                                "FALHA_INTERNA",
-                                "Não foi possível realizar o login."
-                        )
-                );
-
-            } finally {
-                loginEmAndamento = false;
-            }
-        });
     }
 
     public void logout() {
@@ -152,41 +117,31 @@ public class AuthViewModel extends AndroidViewModel {
 
         logoutEmAndamento = true;
 
-        estadoLogout.setValue(
-                EstadoOperacao.processando()
-        );
+        estadoLogout.setValue(EstadoOperacao.processando());
 
-        AppExecutors.IO.execute(() -> {
-            try {
-                usuarioDao.desativarSessoes();
+        AppExecutors.IO.execute(
+                () -> {
+                    try {
+                        usuarioDao.desativarSessoes();
 
-                estadoLogout.postValue(
-                        EstadoOperacao.sucesso()
-                );
+                        estadoLogout.postValue(EstadoOperacao.sucesso());
 
-            } catch (Exception e) {
-                estadoLogout.postValue(
-                        EstadoOperacao.erro(
-                                "FALHA_INTERNA",
-                                "Não foi possível encerrar a sessão."
-                        )
-                );
+                    } catch (Exception e) {
+                        estadoLogout.postValue(
+                                EstadoOperacao.erro(
+                                        "FALHA_INTERNA", "Não foi possível encerrar a sessão."));
 
-            } finally {
-                logoutEmAndamento = false;
-            }
-        });
+                    } finally {
+                        logoutEmAndamento = false;
+                    }
+                });
     }
 
     public void limparEstadoLogin() {
-        estadoLogin.setValue(
-                EstadoOperacao.ocioso()
-        );
+        estadoLogin.setValue(EstadoOperacao.ocioso());
     }
 
     public void limparEstadoLogout() {
-        estadoLogout.setValue(
-                EstadoOperacao.ocioso()
-        );
+        estadoLogout.setValue(EstadoOperacao.ocioso());
     }
 }

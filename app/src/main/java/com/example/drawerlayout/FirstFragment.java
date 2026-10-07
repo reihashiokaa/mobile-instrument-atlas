@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.drawerlayout.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
@@ -27,153 +25,116 @@ public class FirstFragment extends Fragment {
 
     @Override
     public View onCreateView(
-            @NonNull LayoutInflater inflater,
-            ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+            @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentFirstBinding.inflate(
-                inflater,
-                container,
-                false
-        );
+        binding = FragmentFirstBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(
-            @NonNull View view,
-            Bundle savedInstanceState
-    ) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
 
-        sharedViewModel =
-                new ViewModelProvider(requireActivity())
-                        .get(SharedViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         spinner = binding.familia;
 
-        adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item
-        );
+        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item);
 
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item
-        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
 
-        sharedViewModel.getFamilias().observe(
-                getViewLifecycleOwner(),
-                familias -> {
+        sharedViewModel
+                .getFamilias()
+                .observe(
+                        getViewLifecycleOwner(),
+                        familias -> {
+                            atualizandoSpinner = true;
 
-                    atualizandoSpinner = true;
+                            adapter.clear();
 
-                    adapter.clear();
-
-                    if (familias != null) {
-                        adapter.addAll(familias);
-                    }
-
-                    adapter.notifyDataSetChanged();
-
-                    Long familiaSelecionadaId =
-                            sharedViewModel
-                                    .getFamiliaSelecionadaId()
-                                    .getValue();
-
-                    if (familiaSelecionadaId != null) {
-
-                        for (int i = 0; i < adapter.getCount(); i++) {
-
-                            Familia familia =
-                                    adapter.getItem(i);
-
-                            if (familia != null
-                                    && familia.id == familiaSelecionadaId) {
-
-                                spinner.setSelection(i, false);
-                                break;
-                            }
-                        }
-                    }
-
-                    atualizandoSpinner = false;
-                }
-        );
-
-        sharedViewModel.getFamiliaSelecionadaId().observe(
-                getViewLifecycleOwner(),
-                familiaId -> {
-
-                    if (familiaId == null) {
-                        return;
-                    }
-
-                    for (int i = 0; i < adapter.getCount(); i++) {
-
-                        Familia familia =
-                                adapter.getItem(i);
-
-                        if (familia != null
-                                && familia.id == familiaId) {
-
-                            if (spinner.getSelectedItemPosition() != i) {
-                                spinner.setSelection(i);
+                            if (familias != null) {
+                                adapter.addAll(familias);
                             }
 
-                            break;
-                        }
-                    }
-                }
-        );
+                            adapter.notifyDataSetChanged();
+
+                            Long familiaSelecionadaId =
+                                    sharedViewModel.getFamiliaSelecionadaId().getValue();
+
+                            if (familiaSelecionadaId != null) {
+
+                                for (int i = 0; i < adapter.getCount(); i++) {
+
+                                    Familia familia = adapter.getItem(i);
+
+                                    if (familia != null && familia.id == familiaSelecionadaId) {
+
+                                        spinner.setSelection(i, false);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            atualizandoSpinner = false;
+                        });
+
+        sharedViewModel
+                .getFamiliaSelecionadaId()
+                .observe(
+                        getViewLifecycleOwner(),
+                        familiaId -> {
+                            if (familiaId == null) {
+                                return;
+                            }
+
+                            for (int i = 0; i < adapter.getCount(); i++) {
+
+                                Familia familia = adapter.getItem(i);
+
+                                if (familia != null && familia.id == familiaId) {
+
+                                    if (spinner.getSelectedItemPosition() != i) {
+                                        spinner.setSelection(i);
+                                    }
+
+                                    break;
+                                }
+                            }
+                        });
 
         spinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
 
                     @Override
                     public void onItemSelected(
-                            AdapterView<?> parent,
-                            View view,
-                            int position,
-                            long id
-                    ) {
+                            AdapterView<?> parent, View view, int position, long id) {
 
                         if (atualizandoSpinner) {
                             return;
                         }
 
-                        Familia familia =
-                                adapter.getItem(position);
+                        Familia familia = adapter.getItem(position);
 
                         if (familia == null) {
                             return;
                         }
 
                         Long familiaSelecionadaId =
-                                sharedViewModel
-                                        .getFamiliaSelecionadaId()
-                                        .getValue();
+                                sharedViewModel.getFamiliaSelecionadaId().getValue();
 
-                        if (familiaSelecionadaId == null
-                                || familiaSelecionadaId != familia.id) {
+                        if (familiaSelecionadaId == null || familiaSelecionadaId != familia.id) {
 
-                            sharedViewModel.selecionarFamilia(
-                                    familia.id
-                            );
+                            sharedViewModel.selecionarFamilia(familia.id);
                         }
                     }
 
                     @Override
-                    public void onNothingSelected(
-                            AdapterView<?> parent
-                    ) {
-                    }
-                }
-        );
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
     }
 
     @Override

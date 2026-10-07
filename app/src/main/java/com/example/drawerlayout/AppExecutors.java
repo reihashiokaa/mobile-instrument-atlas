@@ -5,9 +5,7 @@ import java.util.concurrent.Executors;
 
 public final class AppExecutors {
 
-    public static final ExecutorService IO =
-            Executors.newSingleThreadExecutor();
+    public static final ExecutorService IO = Executors.newSingleThreadExecutor();
 
-    private AppExecutors() {
-    }
+    private AppExecutors() {}
 }
