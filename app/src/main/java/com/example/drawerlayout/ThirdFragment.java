@@ -63,7 +63,7 @@ public class ThirdFragment extends Fragment {
                     Instrumento instrumento = adapter.getItem(position);
 
                     // Cria a Intent para a tela de detalhes
-                    Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    Intent intent = new Intent(requireContext(), DetalheActivity.class);
 
                     // Envia somente o ID do instrumento
                     intent.putExtra(ContratoApp.EXTRA_INSTRUMENTO_ID, instrumento.id);

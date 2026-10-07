@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailActivity"
+            android:name=".DetalheActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity

@@ -63,7 +63,7 @@ public class SecondFragment extends Fragment {
                     Instrumento instrumento = instrumentoAdapter.getItem(position);
 
                     // cria a Intent para a tela de detalhes
-                    Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    Intent intent = new Intent(requireContext(), DetalheActivity.class);
 
                     // envia somente o ID do instrumento
                     intent.putExtra(ContratoApp.EXTRA_INSTRUMENTO_ID, instrumento.id);

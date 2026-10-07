@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetalheActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
 
@@ -23,7 +23,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_detalhe);
 
         ImageView imageDetail = findViewById(R.id.imageDetail);
 
