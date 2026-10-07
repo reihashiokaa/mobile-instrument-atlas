@@ -3,6 +3,7 @@ package com.example.drawerlayout;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 public class DetalheActivity extends AppCompatActivity {
+
+    private static final String TAG = "DetalheActivity";
 
     private MediaPlayer mediaPlayer;
 
@@ -144,21 +147,18 @@ public class DetalheActivity extends AppCompatActivity {
     }
 
     private void liberarMediaPlayer() {
+        if (mediaPlayer == null) {
+            return;
+        }
 
-        if (mediaPlayer != null) {
-
-            try {
-
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                }
-
-            } catch (Exception e) {
-                // O player pode já ter sido liberado.
+        try {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
             }
-
+        } catch (Exception e) {
+            Log.w(TAG, "Não foi possível interromper o áudio antes da liberação.", e);
+        } finally {
             mediaPlayer.release();
-
             mediaPlayer = null;
         }
     }
