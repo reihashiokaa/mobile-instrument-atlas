@@ -95,71 +95,63 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     private void configurarObservadores() {
-        viewModel
-                .getEstadoInicializacao()
-                .observe(
-                        this,
-                        estado -> {
-                            if (estado != null
-                                    && estado.status == EstadoOperacao.Status.ERRO
-                                    && "SEM_SESSAO".equals(estado.codigo)) {
-                                Toast.makeText(this, estado.mensagem, Toast.LENGTH_LONG).show();
-                                finish();
-                            }
-                        });
+        viewModel.getEstadoInicializacao().observe(this, this::tratarEstadoInicializacao);
+        viewModel.getUsuarioParaEdicao().observe(this, this::preencherDadosUsuario);
+        viewModel.getFoto().observe(this, this::exibirFoto);
+        viewModel.getEstadoSalvar().observe(this, this::tratarEstadoSalvar);
+    }
 
-        viewModel
-                .getUsuarioParaEdicao()
-                .observe(
-                        this,
-                        usuario -> {
-                            if (usuario != null
-                                    && binding.editNome.getText().toString().isEmpty()) {
-                                binding.editNome.setText(usuario.nome);
-                                binding.editEmail.setText(usuario.email);
-                            }
-                        });
+    private void tratarEstadoInicializacao(EstadoOperacao estado) {
+        if (estado != null
+                && estado.status == EstadoOperacao.Status.ERRO
+                && "SEM_SESSAO".equals(estado.codigo)) {
+            Toast.makeText(this, estado.mensagem, Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
 
-        viewModel
-                .getFoto()
-                .observe(
-                        this,
-                        bytesFoto -> {
-                            if (bytesFoto != null) {
-                                Bitmap bitmap = FotoUtils.decodificar(bytesFoto);
-                                if (bitmap != null) {
-                                    binding.imageFotoPerfil.setImageBitmap(bitmap);
-                                }
-                            }
-                        });
+    private void preencherDadosUsuario(Usuario usuario) {
+        if (usuario != null && binding.editNome.getText().toString().isEmpty()) {
+            binding.editNome.setText(usuario.nome);
+            binding.editEmail.setText(usuario.email);
+        }
+    }
 
-        viewModel
-                .getEstadoSalvar()
-                .observe(
-                        this,
-                        estado -> {
-                            if (estado == null || estado.status == EstadoOperacao.Status.OCIOSO)
-                                return;
+    private void exibirFoto(byte[] bytesFoto) {
+        if (bytesFoto != null) {
+            Bitmap bitmap = FotoUtils.decodificar(bytesFoto);
 
-                            if (estado.status == EstadoOperacao.Status.PROCESSANDO) {
-                                binding.progressCadastro.setVisibility(View.VISIBLE);
-                                bloquearCampos(true);
-                            } else if (estado.status == EstadoOperacao.Status.SUCESSO) {
-                                binding.progressCadastro.setVisibility(View.GONE);
-                                Toast.makeText(
-                                                this,
-                                                getString(R.string.cadastro_sucesso),
-                                                Toast.LENGTH_SHORT)
-                                        .show();
-                                viewModel.limparEstadoSalvar();
-                                finish();
-                            } else if (estado.status == EstadoOperacao.Status.ERRO) {
-                                binding.progressCadastro.setVisibility(View.GONE);
-                                bloquearCampos(false);
-                                Toast.makeText(this, estado.mensagem, Toast.LENGTH_LONG).show();
-                                viewModel.limparEstadoSalvar();
-                            }
-                        });
+            if (bitmap != null) {
+                binding.imageFotoPerfil.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+    private void tratarEstadoSalvar(EstadoOperacao estado) {
+        if (estado == null || estado.status == EstadoOperacao.Status.OCIOSO) {
+            return;
+        }
+
+        if (estado.status == EstadoOperacao.Status.PROCESSANDO) {
+            binding.progressCadastro.setVisibility(View.VISIBLE);
+            bloquearCampos(true);
+
+        } else if (estado.status == EstadoOperacao.Status.SUCESSO) {
+            binding.progressCadastro.setVisibility(View.GONE);
+
+            Toast.makeText(this, getString(R.string.cadastro_sucesso), Toast.LENGTH_SHORT).show();
+
+            viewModel.limparEstadoSalvar();
+            finish();
+
+        } else if (estado.status == EstadoOperacao.Status.ERRO) {
+            binding.progressCadastro.setVisibility(View.GONE);
+            bloquearCampos(false);
+
+            Toast.makeText(this, estado.mensagem, Toast.LENGTH_LONG).show();
+
+            viewModel.limparEstadoSalvar();
+        }
     }
 
     private void bloquearCampos(boolean bloquear) {
